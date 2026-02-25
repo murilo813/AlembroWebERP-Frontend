@@ -1,0 +1,87 @@
+.sidebar {
+    width: 26rem; 
+    height: 100vh;
+    background: white;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    position: fixed; 
+    left: 0;
+    top: 0;
+}
+
+.sidebar-header {
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.sidebar-logo {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+}
+
+.sidebar-title {
+    font-size: 2rem;
+    font-weight: 800;
+    background: var(--gradient-green);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.menu-item {
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #555;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-radius: 1.2rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.menu-item:hover {
+    background: #f0fdf4;
+    color: var(--color-primary);
+}
+
+.router-link-active {
+    background: var(--gradient-green);
+    color: white !important;
+}
+
+.sidebar-footer {
+    padding: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 1.2rem;
+    border: none;
+    background: transparent;
+    color: #dc2626;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 1rem;
+    transition: background 0.2s;
+}
+
+.logout-button:hover {
+    background: #fef2f2;
+}
