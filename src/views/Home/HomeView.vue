@@ -3,7 +3,7 @@
     <div class="welcome-section">
       <transition name="fade-up" appear>
         <div class="glass-card">
-          <div class="status-badge">Sistema Online</div>
+          <div class="status-badge">Agropecuária Zecão</div>
           <h1 class="welcome-text">
             Bem-vindo(a), <span class="user-highlight">{{ nomenclature }}</span>
           </h1>
@@ -13,7 +13,7 @@
           <div class="quick-stats">
             <div class="stat-item">
               <span class="stat-label">Empresa</span>
-              <span class="stat-value">Agro Zecão</span>
+              <span class="stat-value">Vila Nova</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">Status</span>
