@@ -1,39 +1,33 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-
-      <div class="logo-placeholder">
-        <img src="/favicon.png" alt="AgroZecão Logo" class="logo-image" />
+      <div class="login-header">
+        <h1 class="brand-title">Alembro</h1>
+        <p class="brand-subtitle">Business Management System</p>
       </div>
 
-      <h1 class="title">AgroZecão</h1>
-      <p class="subtitle">Faça login para continuar</p>
-
-      <form @submit.prevent="handleLogin" style="width: 100%;">
-
+      <form @submit.prevent="handleLogin" class="login-form">
         <div class="input-group">
-          <label>Nome de usuário</label>
-          <div class="input-wrapper">
-            <input type="text" v-model="username" placeholder="Digite seu usuário" required />
-          </div>
+          <label>Usuário</label>
+          <input type="text" v-model="username" placeholder="Digite seu usuário" :disabled="isLoading" required />
         </div>
 
         <div class="input-group">
           <label>Senha</label>
-          <div class="input-wrapper">
-            <input type="password" v-model="password" placeholder="Digite sua senha" required />
-          </div>
+          <input type="password" v-model="password" placeholder="••••••••" :disabled="isLoading" required />
         </div>
 
-        <div v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
+        <p v-if="errorMessage" class="error-msg">{{ errorMessage }}</p>
 
-        <button type="submit" class="login-button" :disabled="isLoading">
-          {{ isLoading ? 'Carregando...' : 'Entrar' }}
+        <button type="submit" class="btn-login" :disabled="isLoading">
+          <span v-if="!isLoading">Acessar Sistema</span>
+          <span v-else>Carregando...</span>
         </button>
-
       </form>
+
+      <footer class="login-footer">
+        <p>&copy; 2026 Agro Zecão. Todos os direitos reservados.</p>
+      </footer>
     </div>
   </div>
 </template>
@@ -61,7 +55,7 @@ const handleLogin = async () => {
     });
 
     if (response.data.success) {
-      const { userId, companyId, nomenclature } = response.data;
+      const { userId, nomenclature } = response.data;
 
       localStorage.setItem('userId', userId);
       localStorage.setItem('nomenclature', nomenclature);

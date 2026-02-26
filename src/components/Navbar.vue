@@ -1,24 +1,24 @@
 <template>
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <img src="/favicon.png" alt="Logo" class="nav-logo" />
-      <span class="brand-name">Alembro</span>
-    </div>
+  <div class="nav-wrapper">
+    <nav class="navbar-floating">
+      <div class="nav-brand">Alembro</div>
 
-    <div class="nav-links">
-      <RouterLink to="/home" class="nav-item">Início</RouterLink>
-      <RouterLink to="/finance" class="nav-item">Financeiro</RouterLink>
-      <RouterLink to="/orders" class="nav-item">Compras</RouterLink>
-      <RouterLink to="/management" class="nav-item">Gerência</RouterLink>
-      <RouterLink to="/stock" class="nav-item">Estoque</RouterLink>
-      <RouterLink to="/expenses" class="nav-item">Gastos</RouterLink>
-    </div>
+      <div class="nav-links">
+        <RouterLink to="/home" class="nav-link">Início</RouterLink>
+        <RouterLink to="/finance" class="nav-link">Financeiro</RouterLink>
+        <RouterLink to="/stock" class="nav-link">Estoque</RouterLink>
+        <RouterLink to="/expenses" class="nav-link">Gastos</RouterLink>
+      </div>
 
-    <div class="nav-actions">
-      <span class="user-name">{{ nomenclature }}</span>
-      <button @click="handleLogout" class="logout-btn">Sair</button>
-    </div>
-  </nav>
+      <div class="nav-user">
+        <div class="user-info">
+          <img src="/assets/user.png" alt="User" class="user-icon icon-admin" />
+          <span class="user-name">{{ nomenclature }}</span>
+        </div>
+        <button @click="logout" class="logout-minimal">Sair</button>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script setup>
@@ -29,11 +29,10 @@ const router = useRouter();
 const nomenclature = ref('');
 
 onMounted(() => {
-  // Pegando a nomenclatura que você salvou no login
   nomenclature.value = localStorage.getItem('nomenclature') || 'Usuário';
 });
 
-const handleLogout = () => {
+const logout = () => {
   localStorage.clear();
   router.push('/login');
 };
