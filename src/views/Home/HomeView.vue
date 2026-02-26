@@ -13,11 +13,11 @@
           <div class="quick-stats">
             <div class="stat-item">
               <span class="stat-label">Empresa</span>
-              <span class="stat-value">Vila Nova</span>
+              <span class="stat-value">{{ companyName }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">Status</span>
-              <span class="stat-value emerald">Administrador</span>
+              <span class="stat-value emerald">{{ userType }}</span>
             </div>
           </div>
         </div>
@@ -27,13 +27,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
+import { COMPANIES, USER_TYPES } from '@/utils/constants';
 
-const nomenclature = ref('');
-
-onMounted(() => {
-  nomenclature.value = localStorage.getItem('nomenclature') || 'Usuário';
-});
+const companyId = localStorage.getItem('companyId');
+const companyName = ref(COMPANIES[Number(companyId)] || 'Indefinido');
+const nomenclature = ref(localStorage.getItem('nomenclature') || 'Usuário');
+const roleKey = localStorage.getItem('userType');
+const userType = USER_TYPES[roleKey] || 'Indefinido'; 
 </script>
 
 <style src="./home.css" scoped></style>

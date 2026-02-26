@@ -3,7 +3,7 @@
     <div class="login-card">
       <div class="login-header">
         <h1 class="brand-title">Alembro</h1>
-        <p class="brand-subtitle">Business Management System</p>
+        <p class="brand-subtitle">Sistema de gestão administrativa</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="login-form">
@@ -74,10 +74,12 @@ const handleLogin = async () => {
     });
 
     if (response.data.success) {
-      const { userId, nomenclature } = response.data;
+      const { user_id, company_id, nomenclature, user_type} = response.data;
 
-      localStorage.setItem('userId', userId);
+      localStorage.setItem('userId', user_id);
+      localStorage.setItem('companyId', company_id);
       localStorage.setItem('nomenclature', nomenclature);
+      localStorage.setItem('userType', user_type);
       localStorage.setItem('isLogged', 'true');
 
       router.push('/home');

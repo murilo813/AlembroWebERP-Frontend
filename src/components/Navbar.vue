@@ -22,12 +22,12 @@
             <div v-if="isDropdownOpen" class="user-dropdown">
               <div class="dropdown-header">
                 <p class="name">{{ nomenclature }}</p>
-                <p class="role">Administrador</p>
+                <p class="role">{{ userType }}</p>
               </div>
               <div class="dropdown-divider"></div>
               <div class="dropdown-body">
                 <p class="company-label">Empresa</p>
-                <p class="company-name">Vila Nova</p>
+                <p class="company-name">{{ companyName }}</p>
               </div>
             </div>
           </Transition>
@@ -40,25 +40,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { COMPANIES, USER_TYPES } from '@/utils/constants';
 
 const router = useRouter();
-const nomenclature = ref('');
+const companyId = localStorage.getItem('companyId');
+const companyName = ref(COMPANIES[Number(companyId)] || 'Indefinido');
+const nomenclature = ref(localStorage.getItem('nomenclature') || 'Indefinido');
+const roleKey = localStorage.getItem('userType');
+const userType = USER_TYPES[roleKey] || 'Indefinido'; 
+
 const isDropdownOpen = ref(false);
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-onMounted(() => {
-  nomenclature.value = localStorage.getItem('nomenclature') || 'Usuário';
+const closeDropdown = (e) => {
+  if (!e.target.closest('.user-menu-container')) {
+    isDropdownOpen.value = false;
+  }
+};
 
-  window.addEventListener('click', (e) => {
-    if (!e.target.closest('.user-menu-container')) {
-      isDropdownOpen.value = false;
-    }
-  });
+onMounted(() => {
+  window.addEventListener('click', closeDropdown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('click', closeDropdown);
 });
 
 const logout = () => {
