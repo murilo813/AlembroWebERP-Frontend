@@ -36,7 +36,7 @@ watchEffect(() => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .system-bg {
