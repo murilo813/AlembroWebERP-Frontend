@@ -1,41 +1,30 @@
 .home-container {
     height: 100vh;
     width: 100vw;
-    background-color: #0f172a;
-    background-image:
-        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(30, 41, 59, 1) 0px, transparent 50%);
     display: flex;
     align-items: center;
     justify-content: center;
+    background: transparent !important;
     margin: 0;
     overflow: hidden;
 }
-
-/* O wrapper agora suporta os 3 elementos em linha */
 .dashboard-box {
     display: flex;
     align-items: center; 
     justify-content: center;
     gap: 3rem; 
     width: 100%;
-    max-width: 180rem; /* Aumentamos um pouco para caber os 3 confortavelmente */
+    max-width: 180rem; 
     padding: 0 4rem;
 }
-
-/* Caso o usuário não tenha um card lateral, essa div mantém o espaço vazio */
-/* Assim o card central não "pula" para o canto */
 .placeholder-sidebar {
     width: 30rem;
     flex-shrink: 0;
 }
-
-/* --- ESTILOS DO SEU CARD CENTRAL (MANTIDOS) --- */
 .welcome-section {
     display: flex;
     flex-shrink: 0;
 }
-
 .glass-card {
     background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(1.6rem);
@@ -49,7 +38,6 @@
     text-align: center;
     animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 .status-badge {
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;
@@ -63,7 +51,6 @@
     margin-bottom: 2.5rem;
     border: 0.1rem solid rgba(16, 185, 129, 0.2);
 }
-
 .welcome-text {
     font-size: 5.2rem;
     color: #ffffff;
@@ -72,13 +59,11 @@
     letter-spacing: -0.3rem;
     margin-bottom: 1rem;
 }
-
 .user-highlight {
     color: #10b981;
     display: block;
     margin-top: 0.5rem;
 }
-
 .divider {
     height: 0.4rem;
     width: 6rem;
@@ -87,7 +72,6 @@
     border-radius: 1rem;
     box-shadow: 0 0 1.5rem rgba(16, 185, 129, 0.4);
 }
-
 .system-brand {
     font-size: 1.8rem;
     color: #64748b;
@@ -95,7 +79,6 @@
     letter-spacing: 0.8rem;
     font-weight: 800;
 }
-
 .quick-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -104,30 +87,25 @@
     padding-top: 4rem;
     border-top: 0.1rem solid rgba(255, 255, 255, 0.1);
 }
-
 .stat-item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
-
 .stat-label {
     font-size: 1.2rem;
     color: #64748b;
     font-weight: 600;
     text-transform: uppercase;
 }
-
 .stat-value {
     font-size: 1.8rem;
     color: #f8fafc;
     font-weight: 700;
 }
-
 .stat-value.emerald {
     color: #10b981;
 }
-
 @keyframes cardEntrance {
     from { opacity: 0; transform: scale(0.95) translateY(2rem); }
     to { opacity: 1; transform: scale(1) translateY(0); }

@@ -27,7 +27,6 @@ watchEffect(() => {
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background-color: #0f172a;
   overflow: hidden;
   position: relative;
 }
