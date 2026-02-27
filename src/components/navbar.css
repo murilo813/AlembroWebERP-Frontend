@@ -51,7 +51,15 @@
     background: rgba(16, 185, 129, 0.15);
     border-radius: 1.2rem;
 }
-
+.nav-disabled {
+    opacity: 0.3;
+    cursor: not-allowed !important;
+    pointer-events: auto; 
+}
+.nav-disabled:hover {
+    background: transparent !important;
+    color: #94a3b8 !important;
+}
 /* USUARIO E ICONE */
 .nav-user {
     display: flex;

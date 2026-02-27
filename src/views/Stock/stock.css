@@ -1,0 +1,17 @@
+.stock-placeholder {
+  height: 100vh;
+  width: 100vw;
+  background-color: #0f172a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+h1 {
+  color: #10b981;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}

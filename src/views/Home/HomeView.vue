@@ -28,7 +28,7 @@
         </transition>
       </div>
 
-
+      <StatsExpensesCard />
 
     </div>
   </div>
@@ -38,7 +38,7 @@
 import { ref } from 'vue';
 import { COMPANIES, USER_TYPES } from '@/utils/constants';
 import StatsCollectionsCard from '@/components/dashboard/StatsCollectionsCard.vue';
-// import StatsExpensesCard from '@/components/dashboard/StatsExpensesCard.vue';
+import StatsExpensesCard from '@/components/dashboard/StatsExpensesCard.vue';
 import StatsBillsCard from '@/components/dashboard/StatsBillsCard.vue';
 
 const companyId = localStorage.getItem('companyId');
