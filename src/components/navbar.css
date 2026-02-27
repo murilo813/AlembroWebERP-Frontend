@@ -8,7 +8,8 @@
     z-index: 1000;
 }
 .navbar-floating {
-    width: calc(100% - 4rem);
+    width: 100%;
+    max-width: 163rem;
     height: 6rem;
     background: rgba(30, 41, 59, 0.4) !important;
     backdrop-filter: blur(2rem) saturate(180%);
