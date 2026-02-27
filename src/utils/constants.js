@@ -24,6 +24,17 @@ export const ROLE_PERMISSIONS = {
     compras: ['home', 'procurement'], 
     v_interno: ['home'],
     v_externo: ['home'],
-    caixa: ['home'],
+    caixa: ['home', 'finance'],
     estoque: ['home']
+};
+export const DASHBOARD_CARDS = {
+    admin: ['collections', 'bills'],
+    gerente: ['collections', 'expenses'],
+    financeiro: ['collections', 'bills'],
+    contabil: ['collections', 'expenses'],
+    compras: [], 
+    v_interno: [],
+    v_externo: [],
+    caixa: ['collections', 'bills'],
+    estoque: [] 
 };

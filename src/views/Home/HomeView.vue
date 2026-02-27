@@ -2,7 +2,11 @@
   <div class="home-container">
     <div class="dashboard-box">
       
-      <StatsCollectionsCard />
+      <component 
+        v-if="activeCards && activeCards[0]"
+        :is="getComponent(activeCards[0])" 
+      />
+      <div v-else class="placeholder-sidebar"></div>
 
       <div class="welcome-section">
         <transition name="fade-up" appear>
@@ -28,15 +32,20 @@
         </transition>
       </div>
 
-      <StatsExpensesCard />
+      <component 
+        v-if="activeCards && activeCards[1]"
+        :is="getComponent(activeCards[1])" 
+      />
+      <div v-else class="placeholder-sidebar"></div>
 
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { COMPANIES, USER_TYPES } from '@/utils/constants';
+import { ref, computed } from 'vue';
+import { COMPANIES, USER_TYPES, DASHBOARD_CARDS } from '@/utils/constants';
+
 import StatsCollectionsCard from '@/components/dashboard/StatsCollectionsCard.vue';
 import StatsExpensesCard from '@/components/dashboard/StatsExpensesCard.vue';
 import StatsBillsCard from '@/components/dashboard/StatsBillsCard.vue';
@@ -46,6 +55,16 @@ const companyName = ref(COMPANIES[Number(companyId)] || 'Indefinido');
 const nomenclature = ref(localStorage.getItem('nomenclature') || 'Usuário');
 const roleKey = localStorage.getItem('userType');
 const userType = USER_TYPES[roleKey] || 'Indefinido';
+const activeCards = computed(() => DASHBOARD_CARDS[roleKey] || []);
+
+const getComponent = (cardName) => {
+  const map = {
+    collections: StatsCollectionsCard,
+    expenses: StatsExpensesCard,
+    bills: StatsBillsCard
+  };
+  return map[cardName];
+};
 </script>
 
 <style src="./home.css" scoped></style>
