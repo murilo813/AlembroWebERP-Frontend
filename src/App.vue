@@ -36,7 +36,9 @@ watchEffect(() => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden; 
+  scrollbar-gutter: stable;
 }
 
 .system-bg {
