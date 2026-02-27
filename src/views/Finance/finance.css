@@ -1,3 +1,8 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 /* CONTAINER PRINCIPAL */
 .finance-container {
   padding: 10rem 4rem 4rem;
@@ -68,7 +73,7 @@
 .btn-primary {
   background: #10b981;
   color: #fff;
-  border: none;
+  border: 0.1rem solid transparent;
   padding: 1.2rem 2.5rem;
   border-radius: 1.2rem;
   font-size: 1.5rem;
@@ -140,14 +145,17 @@
     text-align: left; 
     table-layout: fixed;
 }
-.alembro-table .col-id { width: 8rem; } /* id */
-.alembro-table .col-name { width: auto; } /* nome */
-.alembro-table .col-doc { width: 18rem; } /* cpf */
-.alembro-table .col-group { width: 35rem; } /* responsavel */
-.alembro-table .col-date { width: 15rem; } /* ultima venda */
-.alembro-table td.col-name {
-    white-space: normal;
-    word-wrap: break-word;
+.col-mini { width: 8rem; }  
+.col-date { width: 14rem; } 
+.col-doc-short { width: 10rem; } 
+.col-cpf { width: 13rem; } 
+.col-money { width: 12rem; } 
+.col-name { width: auto; } 
+
+.alembro-table.small-text th,
+.alembro-table.small-text td {
+  padding: 1.2rem 1.5rem; 
+  font-size: 1.3rem; 
 }
 .empty-data {
     color: #ef4444; 
@@ -179,8 +187,8 @@
   font-weight: 700;
   color: #f8fafc !important;
 }
-.text-right {
-  text-align: right;
+.text-center {
+  text-align: center;
 }
 .emerald {
   color: #10b981 !important;
@@ -193,23 +201,25 @@
   grid-template-columns: 4fr 6fr;
   gap: 3rem;
   margin-bottom: 3rem;
+  align-items: stretch;
 }
-
 .panel-card {
   background: #1e293b;
   border: 0.1rem solid rgba(255, 255, 255, 0.05);
   border-radius: 2rem;
   padding: 3rem;
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.4);
+  transform: translateZ(0); 
+  will-change: transform;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
 }
-
 .card-header-flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.5rem;
 }
-
 .panel-title {
   color: #f8fafc;
   font-size: 1.8rem;
@@ -218,11 +228,9 @@
   letter-spacing: 0.1rem;
   margin-bottom: 2rem;
 }
-
 .card-header-flex .panel-title {
   margin-bottom: 0;
 }
-
 .btn-icon-green {
   background: rgba(16, 185, 129, 0.1);
   color: #10b981;
@@ -234,12 +242,10 @@
   transition: 0.2s;
   font-size: 1.6rem;
 }
-
 .btn-icon-green:hover {
   background: #10b981;
   color: #fff;
 }
-
 .detail-label {
   color: #64748b;
   font-size: 1.2rem;
@@ -247,28 +253,112 @@
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
-
 .detail-value {
   color: #cbd5e1;
   font-size: 1.6rem;
   font-weight: 500;
 }
-
 .detail-value.highlight {
   color: #10b981;
   font-size: 2.2rem;
   font-weight: 800;
 }
-
-.mt-2 {
-  margin-top: 2rem;
+.client-list-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  gap: 2rem;
 }
 
+.client-list-header .col-left,
+.list-name {
+  flex: 3; 
+  text-align: left;
+}
+
+.client-list-header .col-right,
+.client-list-item .list-group {
+  flex: 1; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.client-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; 
+  padding: 1.5rem 0;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.04);
+  gap: 2rem; 
+}
+
+.client-list-item .list-group {
+  display: flex;
+  justify-content: center; 
+  flex: 1;
+  color: #94a3b8;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: center; 
+  word-wrap: break-word;
+}
+.client-list-item:last-child {
+  border-bottom: none;
+}
+.list-name {
+  color: #10b981;
+  font-size: 1.8rem; 
+  font-weight: 800;
+  flex: 3;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+.list-group {
+  color: #94a3b8; 
+  font-size: 1.3rem; 
+  font-weight: 500;
+  flex: 1;
+  text-align: right;
+  word-wrap: break-word; 
+}
+
+
 /* LINHA DO TEMPO (ATENDIMENTOS) */
+.atendimentos-card {
+  position: relative; 
+  overflow: hidden; 
+}
+
 .timeline {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  position: absolute;
+  top: 7.5rem; 
+  bottom: 3rem; 
+  left: 3rem;
+  right: 0.5rem;
+  overflow-y: auto; 
+  padding-right: 1.5rem;
+  overscroll-behavior: contain;
+}
+.timeline::-webkit-scrollbar {
+  width: 0.6rem;
+}
+.timeline::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 1rem;
+}
+.timeline::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2); 
+  border-radius: 1rem;
+}
+.timeline::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.8);
 }
 
 .timeline-item {
@@ -328,15 +418,24 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  margin-bottom: 4rem;
+  margin-bottom: 1rem;
 }
-
+.accordion-body-wrapper {
+  display: grid;
+  grid-template-rows: 0fr; 
+  transition: grid-template-rows 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 .accordion-item {
   background: #1e293b;
   border: 0.1rem solid rgba(255, 255, 255, 0.08);
   border-radius: 1.6rem;
   overflow: hidden;
   transition: all 0.3s;
+  transform: translateZ(0);
+  will-change: transform;
+}
+.accordion-item.open .accordion-body-wrapper {
+  grid-template-rows: 1fr;
 }
 
 .accordion-item.open {
@@ -362,8 +461,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
+  transition: color 0.3s ease;
 }
-
+.accordion-item.open .accordion-title {
+  color: #10b981;
+}
 .accordion-right {
   display: flex;
   align-items: center;
@@ -387,9 +489,17 @@
 }
 
 .accordion-body {
-  border-top: 0.1rem solid rgba(255, 255, 255, 0.05);
-  padding: 2rem;
+  overflow: hidden; 
+  padding: 0 2rem; 
   background: rgba(0, 0, 0, 0.1);
+  transition: padding 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+  opacity: 0;
+  border-top: 0.1rem solid transparent; 
+}
+.accordion-item.open .accordion-body {
+  padding: 2rem;
+  opacity: 1;
+  border-top-color: rgba(255, 255, 255, 0.05);
 }
 
 .empty-state {
@@ -399,27 +509,20 @@
   padding: 2rem 0;
 }
 
-/* TOTAL GERAL  */
+/* --- TOTAL GERAL (LIMPO E NA ESQUERDA) --- */
 .grand-total-box {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  padding: 3rem;
-  background: rgba(16, 185, 129, 0.05);
-  border: 0.1rem solid rgba(16, 185, 129, 0.2);
-  border-radius: 2rem;
-  width: fit-content;
-  margin-left: auto;
+  align-items: flex-start; 
+  margin-top: -1.5rem; 
 }
-
 .gt-label {
   color: #94a3b8;
   font-size: 1.4rem;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem; 
 }
-
 .gt-value {
   color: #10b981;
   font-size: 4.8rem;
