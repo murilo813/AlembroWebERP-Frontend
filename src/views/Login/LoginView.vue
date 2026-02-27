@@ -74,12 +74,12 @@ const handleLogin = async () => {
     });
 
     if (response.data.success) {
-      const { user_id, company_id, nomenclature, user_type} = response.data;
+      const { userId, companyId, nomenclature, userType} = response.data;
 
-      localStorage.setItem('userId', user_id);
-      localStorage.setItem('companyId', company_id);
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('companyId', companyId);
       localStorage.setItem('nomenclature', nomenclature);
-      localStorage.setItem('userType', user_type);
+      localStorage.setItem('userType', userType);
       localStorage.setItem('isLogged', 'true');
 
       router.push('/home');
