@@ -1,17 +1,443 @@
-.finance-placeholder {
-  height: 100vh;
-  width: 100vw;
-  background-color: #0f172a;
+/* CONTAINER PRINCIPAL */
+.finance-container {
+  padding: 10rem 4rem 4rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+.finance-wrapper {
+  width: 100%;
+  max-width: 160rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* CABEÇALHO E PESQUISA */
+.finance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 2rem;
+}
+.main-title {
+  color: #f8fafc;
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: -0.1rem;
+}
+.subtitle {
+  color: #64748b;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+.search-bar {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 1.5rem;
+  color: #64748b;
+  font-size: 1.6rem;
+}
+.input-group input {
+  background: #1e293b;
+  border: 0.1rem solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.2rem;
+  padding: 1.2rem 2rem 1.2rem 4.5rem;
+  width: 40rem;
+  color: #f8fafc;
+  font-size: 1.5rem;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+.input-group input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 1.5rem rgba(16, 185, 129, 0.2);
+}
+.btn-primary {
+  background: #10b981;
   color: #fff;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  border-radius: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  min-width: 14rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-primary:hover {
+  background: #059669;
+  transform: translateY(-0.2rem);
+}
+.btn-primary:disabled {
+    cursor: not-allowed;
+    pointer-events: none; 
+}
+.btn-secondary {
+  background: transparent;
+  color: #94a3b8;
+  border: 0.1rem solid rgba(255, 255, 255, 0.1);
+  padding: 1.2rem 2rem;
+  border-radius: 1.2rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+/* ESTADO VAZIO (Pronto para pesquisar) */
+.empty-search-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  padding: 10rem 0;
+  color: #475569;
+}
+.empty-icon {
+  font-size: 6rem;
+  margin-bottom: 2rem;
+  opacity: 0.5;
+}
+.empty-search-state h2 {
+  font-size: 2.4rem;
+  color: #64748b;
+  margin-bottom: 1rem;
 }
 
-h1 {
+/* TABELAS GENÉRICAS */
+.table-responsive {
+    background: #1e293b;
+    border-radius: 1.6rem;
+    border: 0.1rem solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+.alembro-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    text-align: left; 
+    table-layout: fixed;
+}
+.alembro-table .col-id { width: 8rem; } /* id */
+.alembro-table .col-name { width: auto; } /* nome */
+.alembro-table .col-doc { width: 18rem; } /* cpf */
+.alembro-table .col-group { width: 35rem; } /* responsavel */
+.alembro-table .col-date { width: 15rem; } /* ultima venda */
+.alembro-table td.col-name {
+    white-space: normal;
+    word-wrap: break-word;
+}
+.empty-data {
+    color: #ef4444; 
+    font-style: italic;
+    font-size: 1.2rem;
+}
+.alembro-table th {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 2rem;
+  color: #64748b;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+.alembro-table td {
+  padding: 1.5rem 2rem;
+  color: #cbd5e1;
+  font-size: 1.4rem;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.03);
+}
+.alembro-table tbody tr {
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.alembro-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.fw-bold {
+  font-weight: 700;
+  color: #f8fafc !important;
+}
+.text-right {
+  text-align: right;
+}
+.emerald {
+  color: #10b981 !important;
+}
+
+
+/* DASHBOARD DO CLIENTE */
+.dashboard-top-row {
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.panel-card {
+  background: #1e293b;
+  border: 0.1rem solid rgba(255, 255, 255, 0.05);
+  border-radius: 2rem;
+  padding: 3rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.4);
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.panel-title {
+  color: #f8fafc;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  margin-bottom: 2rem;
+}
+
+.card-header-flex .panel-title {
+  margin-bottom: 0;
+}
+
+.btn-icon-green {
+  background: rgba(16, 185, 129, 0.1);
   color: #10b981;
-  font-size: 4rem;
-  margin-bottom: 1rem;
+  border: none;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 1.6rem;
+}
+
+.btn-icon-green:hover {
+  background: #10b981;
+  color: #fff;
+}
+
+.detail-label {
+  color: #64748b;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.detail-value {
+  color: #cbd5e1;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.detail-value.highlight {
+  color: #10b981;
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.mt-2 {
+  margin-top: 2rem;
+}
+
+/* LINHA DO TEMPO (ATENDIMENTOS) */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 2rem;
+  bottom: -2rem;
+  width: 0.2rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.timeline-dot {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: #10b981;
+  margin-top: 0.4rem;
+  box-shadow: 0 0 1rem rgba(16, 185, 129, 0.4);
+  z-index: 1;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-date {
+  font-size: 1.2rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.timeline-obs {
+  font-size: 1.4rem;
+  color: #f8fafc;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.timeline-client {
+  font-size: 1.1rem;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.2rem 0.8rem;
+  border-radius: 0.6rem;
+  display: inline-block;
+}
+
+/* NOTAS, CHEQUES, CONTRATOS */
+.financial-lists {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.accordion-item {
+  background: #1e293b;
+  border: 0.1rem solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.6rem;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.accordion-item.open {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.accordion-header {
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.accordion-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.accordion-title {
+  color: #f8fafc;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.accordion-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.list-total {
+  color: #10b981;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.toggle-icon {
+  color: #64748b;
+  transition: transform 0.3s;
+}
+
+.accordion-item.open .toggle-icon {
+  transform: rotate(180deg);
+  color: #10b981;
+}
+
+.accordion-body {
+  border-top: 0.1rem solid rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.empty-state {
+  color: #64748b;
+  text-align: center;
+  font-style: italic;
+  padding: 2rem 0;
+}
+
+/* TOTAL GERAL  */
+.grand-total-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 3rem;
+  background: rgba(16, 185, 129, 0.05);
+  border: 0.1rem solid rgba(16, 185, 129, 0.2);
+  border-radius: 2rem;
+  width: fit-content;
+  margin-left: auto;
+}
+
+.gt-label {
+  color: #94a3b8;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.gt-value {
+  color: #10b981;
+  font-size: 4.8rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 2rem rgba(16, 185, 129, 0.3);
+}
+
+/* ANIMAÇÕES */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-2rem);
 }
