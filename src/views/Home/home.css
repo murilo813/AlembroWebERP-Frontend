@@ -23,7 +23,9 @@
 }
 .welcome-section {
     display: flex;
-    flex-shrink: 0;
+    flex: 1; 
+    justify-content: center;
+    min-width: 0; 
 }
 .glass-card {
     background: rgba(30, 41, 59, 0.7);
