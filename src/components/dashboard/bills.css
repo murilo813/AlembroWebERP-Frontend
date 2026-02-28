@@ -1,5 +1,8 @@
 .stats-sidebar-card {
     width: 30rem;
+    min-width: 30rem;
+    max-width: 30rem;
+    flex-shrink: 0;
     min-height: 52rem;
     background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(1.6rem);
