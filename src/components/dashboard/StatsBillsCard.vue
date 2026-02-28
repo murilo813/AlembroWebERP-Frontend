@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import api from '@/services/api';
+import api from '@/api/api';
 
 const stats = ref({ today: 0, week: 0, expired: 0 });
 const userId = localStorage.getItem('userId');

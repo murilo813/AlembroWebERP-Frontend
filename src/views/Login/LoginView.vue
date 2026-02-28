@@ -53,7 +53,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import api from '../../services/api';
+import authService from '@/services/authService'; 
 
 const username = ref('');
 const password = ref('');
@@ -68,27 +68,15 @@ const handleLogin = async () => {
   isLoading.value = true;
 
   try {
-    const response = await api.post('/login', {
-      username: username.value,
-      password: password.value
-    });
+    await authService.login(username.value, password.value);
+    
+    router.push('/home');
 
-    if (response.data.success) {
-      const { userId, companyId, nomenclature, userType} = response.data;
-
-      localStorage.setItem('userId', userId);
-      localStorage.setItem('companyId', companyId);
-      localStorage.setItem('nomenclature', nomenclature);
-      localStorage.setItem('userType', userType);
-      localStorage.setItem('isLogged', 'true');
-
-      router.push('/home');
-    } else {
-      errorMessage.value = response.data.message || 'Usuário ou senha incorretos.';
-    }
   } catch (error) {
-    if (!error.response) {
-      errorMessage.value = 'Sem conexão com o servidor.';
+    if (error.isCustom) {
+      errorMessage.value = error.message; 
+    } else if (!error.response) {
+      errorMessage.value = 'Sem conexão com o servidor.'; 
     } else if (error.response.status === 401 || error.response.status === 404) {
       errorMessage.value = 'Usuário ou senha incorretos.';
     } else {
@@ -99,5 +87,4 @@ const handleLogin = async () => {
   }
 };
 </script>
-
 <style src="./login.css" scoped></style>
