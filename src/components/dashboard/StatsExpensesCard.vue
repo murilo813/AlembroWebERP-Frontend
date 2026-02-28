@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import api from '@/api/api';
+import statsService from '@/services/statsService';
 
 const stats = ref({ today: 0, week: 0, month: 0 });
 const userId = localStorage.getItem('userId');
@@ -51,8 +51,7 @@ const formatCurrency = (value) => {
 
 const fetchStats = async () => {
   try {
-    const response = await api.get(`/stats/expenses`, { params: { userId } });
-    stats.value = response.data;
+    stats.value = await statsService.getExpensesStats(userId);
   } catch (e) {
     console.error("Erro ao buscar stats de gastos:", e);
   }

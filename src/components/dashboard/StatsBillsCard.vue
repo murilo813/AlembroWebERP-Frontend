@@ -35,15 +35,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import api from '@/api/api';
+import statsService from '@/services/statsService';
 
 const stats = ref({ today: 0, week: 0, expired: 0 });
 const userId = localStorage.getItem('userId');
 
 const fetchStats = async () => {
   try {
-    const response = await api.get(`/stats/bills`, { params: { userId } });
-    stats.value = response.data;
+    stats.value = await statsService.getBillsStats(userId);
   } catch (e) {
     console.error("Erro ao carregar stats financeiro:", e);
   }

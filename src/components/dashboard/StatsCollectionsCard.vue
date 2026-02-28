@@ -33,19 +33,22 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import api from '@/api/api';
+import statsService from '@/services/statsService';
 
 const stats = ref({ today: 0, week: 0, month: 0 });
 const userId = localStorage.getItem('userId');
 
 const fetchStats = async () => {
   try {
-    const response = await api.get(`/stats/collections`, { params: { userId } });
-    stats.value = response.data;
-  } catch (e) { console.error(e); }
+    stats.value = await statsService.getCollectionsStats(userId);
+  } catch (e) {
+    console.error("Erro ao carregar stats de atendimentos:", e);
+  }
 };
 
-onMounted(() => { if (userId) fetchStats(); });
+onMounted(() => {
+  if (userId) fetchStats();
+});
 </script>
 
 <style src="@/components/dashboard/collections.css" scoped></style>
