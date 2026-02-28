@@ -8,7 +8,7 @@
     z-index: 1000;
 }
 .navbar-floating {
-    width: 100%;
+    width: calc(100% - 4rem);
     max-width: 163rem;
     height: 6rem;
     background: rgba(30, 41, 59, 0.4) !important;
@@ -21,6 +21,7 @@
     justify-content: space-between;
     padding: 0 3rem;
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
 }
 
 /* ALEMBRO */
