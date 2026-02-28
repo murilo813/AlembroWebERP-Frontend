@@ -87,7 +87,7 @@
               <div class="panel-card atendimentos-card">
                 <h3 class="panel-title">Atendimentos</h3>
                 <div class="timeline">
-                  <div class="timeline-item" v-for="atd in mockAtendimentos" :key="atd.id">
+                  <div class="timeline-item" v-for="atd in atendimentos" :key="atd.id">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                       <span class="timeline-date">{{ atd.date }} - {{ atd.user }}</span>
@@ -127,7 +127,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="contrato in mockContratos" :key="contrato.id">
+                        <tr v-for="contrato in contratos" :key="contrato.id">
                           <td class="text-center">{{ contrato.companyId }}</td>
                           <td>{{ contrato.clientName }}</td>
                           <td class="text-center">{{ contrato.cpf_cnpj }}</td>
@@ -170,7 +170,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="cheque in mockCheques" :key="cheque.id">
+                        <tr v-for="cheque in cheques" :key="cheque.id">
                           <td class="text-center">{{ cheque.emp }}</td>
                           <td>{{ cheque.nome }}</td>
                           <td class="text-center">{{ cheque.cpfCnpj }}</td>
@@ -214,7 +214,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="nota in mockNotas" :key="nota.id">
+                        <tr v-for="nota in notas" :key="nota.id">
                           <td class="text-center">{{ nota.emp }}</td>
                           <td>{{ nota.nome }}</td>
                           <td class="text-center">{{ nota.cpfCnpj }}</td>
@@ -272,97 +272,79 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import financeService from '@/services/financeService';
 
 const searchQuery = ref('');
 const searchResults = ref([]);
 const activeClient = ref(null);
 const isLoading = ref(false);
 const hasSearched = ref(false);
-const searchTriggerCounter = ref(0);
 
-const activeGroupClients = computed(() => {
-  if (!activeClient.value) return [];
-  return mockClientsDatabase.filter(c => c.group === activeClient.value.group);
-});
+const activeGroupClients = ref([]);
+const atendimentos = ref([]);
+const contratos = ref([]);
+const cheques = ref([]);
+const notas = ref([]);
 
-const activeAccordion = ref('notas');
+const activeAccordion = ref('');
 const toggleAccordion = (section) => {
-  activeAccordion.value = activeAccordion.value === section ? null: section;
+  activeAccordion.value = activeAccordion.value === section ? null : section;
 };
-
-const mockClientsDatabase = [
-  { id: 101, name: "THIAGO FARIAS LIMA", document: "111.222.333-44", group: "THIAGO FARIAS LIMA", lastSale: "25/02/2026" },
-  { id: 102, name: "MURILO DE SOUZA", document: "999.888.777-66", group: "THIAGO FARIAS LIMA", lastSale: null },
-];
-
-const mockAtendimentos = ref([
-  { id: 1, date: "18/03/2026", user: "Marcos Adm", obs: "Falei com ele, prospectando novo contrato de insumos.", clientRef: "TTHIAGO FARIAS LIMA" },
-  { id: 2, date: "15/01/2026", user: "Murilo", obs: "Cobrança via e-mail referente a parcela atrasada.", clientRef: "THIAGO FARIAS LIMA" },
-  { id: 3, date: "13/01/2026", user: "Murilo", obs: "teste na soja.", clientRef: "THIAGO FARIAS LIMA" },
-  { id: 4, date: "10/01/2026", user: "Murilo", obs: "teste no site.", clientRef: "MURILO DE SOUZA" },
-]);
-
-const mockContratos = ref([
-  { id: 1, companyId: "1", clientName: "THIAGO FARIAS LIMA", cpf_cnpj: "111.222.333-44", contractType: "Soja Futuro", generationDate: "10/01/2026", dueDate: "10/05/2026", originalValue: 150000.00, balanceDue: 50000.00 },
-]);
-
-const mockCheques = ref([
-  { id: 1, emp: "1", nome: "THIAGO FARIAS", cpfCnpj: "111.222.333-44", doc: "CHQ-9912", correntista: "Thiago F. Lima", recebimento: "15/02/2026", bomPara: "15/03/2026", valor: 2500.00, aReceber: 2500.00 },
-  { id: 2, emp: "1", nome: "THIAGO FARIAS", cpfCnpj: "111.222.333-44", doc: "CHQ-9913", correntista: "Thiago F. Lima", recebimento: "15/02/2026", bomPara: "15/04/2026", valor: 2500.00, aReceber: 2500.00 }
-]);
-
-const mockNotas = ref([
-  { id: 1, emp: "3", nome: "THIAGO FARIAS", cpfCnpj: "111.222.333-44", nfe: "11945", parcela: "1/3", geracao: "02/01/2026", vencimento: "02/02/2026", valor: 182.00, aReceber: 182.00 },
-  { id: 2, emp: "3", nome: "THIAGO FARIAS", cpfCnpj: "111.222.333-44", nfe: "2519A", parcela: "2/3", geracao: "02/02/2026", vencimento: "02/03/2026", valor: 182.00, aReceber: 182.00 },
-  { id: 3, emp: "1", nome: "THIAGO FARIAS", cpfCnpj: "111.222.333-44", nfe: "2519A", parcela: "3/3", geracao: "02/03/2026", vencimento: "02/04/2026", valor: 182.00, aReceber: 182.00 },
-]);
 
 const totals = computed(() => {
   return {
-    contratos: mockContratos.value.reduce((acc, curr) => acc + curr.balanceDue, 0),
-    cheques: mockCheques.value.reduce((acc, curr) => acc + curr.aReceber, 0),
-    notas: mockNotas.value.reduce((acc, curr) => acc + curr.aReceber, 0)
+    contratos: contratos.value.reduce((acc, curr) => acc + curr.balanceDue, 0),
+    cheques: cheques.value.reduce((acc, curr) => acc + curr.aReceber, 0),
+    notas: notas.value.reduce((acc, curr) => acc + curr.aReceber, 0)
   };
 });
 
 const grandTotal = computed(() => totals.value.contratos + totals.value.cheques + totals.value.notas);
 
-const handleSearch = () => {
-  if (isLoading.value) return;
+const handleSearch = async () => {
+  if (isLoading.value || !searchQuery.value.trim()) return;
 
   const query = searchQuery.value.trim();
-
   isLoading.value = true;
   activeClient.value = null;
   hasSearched.value = false;
 
-  setTimeout(() => { // simluando loading 
+  try {
+    const results = await financeService.searchClients(query);
     
-    if (query && !isNaN(query)) {
-      const found = mockClientsDatabase.find(c => c.id === parseInt(query));
-      if (found) {
-         openClient(found);
-         isLoading.value = false;
-         hasSearched.value = true;
-         return;
-      }
-      searchResults.value = [];
+    if (results.length === 1) {
+      await openClient(results[0]);
     } else {
-      searchResults.value = mockClientsDatabase.filter(c => 
-        c.name.toLowerCase().includes(query.toLowerCase())
-      );
+      searchResults.value = results;
     }
     
-    searchTriggerCounter.value++; 
-    isLoading.value = false; 
     hasSearched.value = true;
-    
-  }, 600);
+  } catch (error) {
+    console.error("Erro ao pesquisar clientes:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-const openClient = (client) => {
-  activeClient.value = client;
-  searchResults.value = []; 
+const openClient = async (client) => {
+  isLoading.value = true;
+  
+  try {
+    const dashboardData = await financeService.getClientDashboard(client);
+    
+    activeGroupClients.value = [...dashboardData.groupClients];
+    atendimentos.value = [...dashboardData.atendimentos];
+    contratos.value = [...dashboardData.contratos];
+    cheques.value = [...dashboardData.cheques];
+    notas.value = [...dashboardData.notas];
+
+    activeClient.value = client;
+    searchResults.value = []; 
+  } catch (error) {
+    console.error("Erro ao abrir painel do cliente:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const clearSearch = () => {
