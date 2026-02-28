@@ -1,11 +1,6 @@
 import api from '@/api/api';
 
 export default {
-    async getBillsStats(userId) {
-        const response = await api.get('/stats/bills', { params: { userId } });
-        return response.data;
-    },
-
     async getCollectionsStats(userId) {
         const response = await api.get('/stats/collections', { params: { userId } });
         return response.data;
@@ -13,6 +8,11 @@ export default {
 
     async getExpensesStats(userId) {
         const response = await api.get('/stats/expenses', { params: { userId } });
+        return response.data;
+    },
+    
+    async getBillsStats(userId) {
+        const response = await api.get('/stats/bills', { params: { userId } });
         return response.data;
     }
 };

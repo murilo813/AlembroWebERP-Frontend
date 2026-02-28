@@ -10,18 +10,24 @@
 
       <div class="stats-content">
         <div class="stat-group active-orange">
-          <span class="stat-num">{{ stats.today }}</span>
-          <span class="stat-label-small">Notas Hoje</span>
+          <span class="stat-num money-text" :style="{ fontSize: getFontSize(stats.today) }">
+            {{ formatCurrency(stats.today) }}
+          </span>
+          <span class="stat-label-small">Gasto Hoje</span>
         </div>
 
         <div class="stat-group">
-          <span class="stat-num money-text">{{ formatCurrency(stats.week) }}</span>
+          <span class="stat-num money-text" :style="{ fontSize: getFontSize(stats.week) }">
+            {{ formatCurrency(stats.week) }}
+          </span>
           <span class="stat-label-small">Total na Semana</span>
         </div>
 
         <div class="stat-group">
-          <span class="stat-num">{{ stats.month }}</span>
-          <span class="stat-label-small">Notas no Mês</span>
+          <span class="stat-num money-text" :style="{ fontSize: getFontSize(stats.month) }">
+            {{ formatCurrency(stats.month) }}
+          </span>
+          <span class="stat-label-small">Total no Mês</span>
         </div>
       </div>
 
@@ -49,6 +55,16 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
+const getFontSize = (value) => {
+  const text = formatCurrency(value);
+  const length = text.length;
+
+  if (length > 14) return '1.8rem';
+  if (length > 11) return '2.2rem';
+  if (length > 9) return '3.0rem';
+  return '4rem';
+};
+
 const fetchStats = async () => {
   try {
     stats.value = await statsService.getExpensesStats(userId);
@@ -62,4 +78,6 @@ onMounted(() => {
 });
 </script>
 
-<style src="@/components/dashboard/expenses.css" scoped></style>
+<style scoped>
+@import "@/components/dashboard/expenses.css";
+</style>

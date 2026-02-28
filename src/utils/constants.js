@@ -28,7 +28,7 @@ export const ROLE_PERMISSIONS = {
     estoque: ['home']
 };
 export const DASHBOARD_CARDS = {
-    admin: ['collections', 'bills'],
+    admin: ['collections', 'expenses'],
     gerente: ['collections', 'expenses'],
     financeiro: ['collections', 'bills'],
     contabil: ['collections', 'expenses'],
