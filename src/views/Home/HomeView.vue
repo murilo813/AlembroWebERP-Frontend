@@ -67,4 +67,4 @@ const getComponent = (cardName) => {
 };
 </script>
 
-<style src="./home.css" scoped></style>
+<style src="@/views/Home/home.css" scoped></style>

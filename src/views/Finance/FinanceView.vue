@@ -377,4 +377,4 @@ const formatCurrency = (value) => {
 };
 </script>
 
-<style src="./finance.css" scoped></style>
+<style src="@/views/Finance/finance.css" scoped></style>

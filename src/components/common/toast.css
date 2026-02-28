@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 3rem;
   right: 3rem;
-  background: #1e293b; /* Sólido como o modal */
+  background: #1e293b;
   border: 0.1rem solid rgba(239, 68, 68, 0.4);
   border-radius: 1.2rem;
   padding: 1.5rem 2.5rem;
@@ -19,7 +19,7 @@
 }
 
 .toast-icon {
-  color: #ef4444; /* Vermelho para erro */
+  color: #ef4444;
   font-size: 1.8rem;
 }
 
@@ -40,11 +40,29 @@
 }
 
 @keyframes progress {
-  from { width: 100%; }
-  to { width: 0%; }
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
 }
 
-.toast-fade-enter-active { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.toast-fade-leave-active { transition: all 0.3s ease; }
-.toast-fade-enter-from { opacity: 0; transform: translateY(2rem) scale(0.9); }
-.toast-fade-leave-to { opacity: 0; transform: translateX(5rem); }
+.toast-fade-enter-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toast-fade-enter-from {
+  opacity: 0;
+  transform: translateY(2rem) scale(0.9);
+}
+
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(5rem);
+}

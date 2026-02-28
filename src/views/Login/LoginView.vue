@@ -87,4 +87,4 @@ const handleLogin = async () => {
   }
 };
 </script>
-<style src="./login.css" scoped></style>
+<style src="@/views/Login/login.css" scoped></style>
