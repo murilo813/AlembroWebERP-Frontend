@@ -22,6 +22,7 @@
     </Transition>
     
     <div v-if="isOpen" class="select-overlay" @click="isOpen = false"></div>
+    
   </div>
 </template>
 
