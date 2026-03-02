@@ -58,7 +58,7 @@
   background: #1e293b;
   border: 0.1rem solid rgba(255, 255, 255, 0.1);
   border-radius: 1.2rem;
-  padding: 1.2rem 2rem 1.2rem 4.5rem;
+  padding: 1.2rem 4.5rem 1.2rem 4.5rem;
   width: 40rem;
   color: #f8fafc;
   font-size: 1.5rem;
@@ -69,6 +69,18 @@
   outline: none;
   border-color: #10b981;
   box-shadow: 0 0 1.5rem rgba(16, 185, 129, 0.2);
+}
+.clear-icon {
+  position: absolute;
+  right: 1.5rem;
+  color: #64748b;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.clear-icon:hover {
+  color: #ef4444; 
+  transform: scale(1.1); 
 }
 .btn-primary {
   background: #10b981;
@@ -112,6 +124,32 @@
   color: #f8fafc;
 }
 
+/* ANIMAÇÕES da entrada do botão voltar */
+.slide-btn-enter-active,
+.slide-btn-leave-active {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  white-space: nowrap; 
+}
+
+.slide-btn-enter-from,
+.slide-btn-leave-to {
+  opacity: 0;
+  max-width: 0; 
+  padding-left: 0;
+  padding-right: 0;
+  border-width: 0;
+  margin-left: -1.5rem; 
+  transform: translateX(1.5rem); 
+}
+
+.slide-btn-enter-to,
+.slide-btn-leave-from {
+  max-width: 15rem; 
+  opacity: 1;
+  margin-left: 0;
+  transform: translateX(0);
+}
 /* ESTADO VAZIO (Pronto para pesquisar) */
 .empty-search-state {
   display: flex;

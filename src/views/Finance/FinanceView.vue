@@ -17,15 +17,23 @@
               placeholder="Pesquisar por Nome ou ID do cliente..."
               @keyup.enter="handleSearch"
             />
+            <i
+              v-if="searchQuery"
+              class="fa-solid fa-xmark clear-icon"
+              @click="clearInput"
+              title="Limpar pesquisa"
+            ></i>
           </div>
           <button class="btn-primary" @click="handleSearch" :disabled="isLoading">
             <i v-if="isLoading" class="fa-solid fa-circle-notch fa-spin"></i>
             <span v-else>Pesquisar</span>
           </button>
           
-          <button v-if="activeClient" class="btn-secondary" @click="clearSearch">
-            <i class="fa-solid fa-arrow-left"></i> Voltar
-          </button>
+          <Transition name="slide-btn">
+            <button v-if="activeClient" class="btn-secondary" @click="clearSearch">
+              <i class="fa-solid fa-arrow-left"></i> Voltar
+            </button>
+          </Transition>
         </div>
       </header>
 
@@ -339,7 +347,6 @@ const openClient = async (client) => {
     notas.value = [...dashboardData.notas];
 
     activeClient.value = client;
-    searchResults.value = []; 
   } catch (error) {
     console.error("Erro ao abrir painel do cliente:", error);
   } finally {
@@ -349,9 +356,15 @@ const openClient = async (client) => {
 
 const clearSearch = () => {
   activeClient.value = null;
+  activeGroupClients.value = [];
+  atendimentos.value = [];
+  contratos.value = [];
+  cheques.value = [];
+  notas.value = [];
+};
+
+const clearInput = () => {
   searchQuery.value = '';
-  searchResults.value = [];
-  hasSearched.value = false; 
 };
 
 const formatCurrency = (value) => {
