@@ -52,3 +52,11 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #10b981;
 }
+.form-control::placeholder {
+  color: #64748b !important;
+  opacity: 1; 
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #64748b;
+}
