@@ -257,7 +257,7 @@
           <div v-else-if="!isLoading && hasSearched && searchResults.length === 0" class="empty-search-state" key="not-found">
             <i class="fa-solid fa-magnifying-glass-minus empty-icon" style="color: #ef4444; opacity: 0.8;"></i>
             <h2>Nenhum resultado encontrado</h2>
-            <p>Não encontramos nenhum cliente com "{{ searchQuery }}".</p>
+            <p>Não encontramos nenhum cliente com "{{ lastSearchedTerm }}".</p>
           </div>
 
           <div v-else-if="!isLoading && !hasSearched" class="empty-search-state" key="empty">
@@ -283,6 +283,7 @@ import { ref, computed } from 'vue';
 import financeService from '@/services/financeService';
 
 const searchQuery = ref('');
+const lastSearchedTerm = ref('');
 const searchResults = ref([]);
 const activeClient = ref(null);
 const isLoading = ref(false);
@@ -313,12 +314,14 @@ const handleSearch = async () => {
   if (isLoading.value || !searchQuery.value.trim()) return;
 
   const query = searchQuery.value.trim();
+  lastSearchedTerm.value = query;
   isLoading.value = true;
   activeClient.value = null;
   hasSearched.value = false;
 
   try {
     const results = await financeService.searchClients(query);
+    searchResults.value = results;
     
     if (results.length === 1) {
       await openClient(results[0]);
