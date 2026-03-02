@@ -1,7 +1,7 @@
 <template>
   <div class="finance-container">
     <div class="finance-wrapper">
-      
+
       <header class="finance-header">
         <div class="title-section">
           <h1 class="main-title">Módulo Financeiro</h1>
@@ -11,24 +11,15 @@
         <div class="search-bar">
           <div class="input-group">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input 
-              v-model="searchQuery" 
-              type="text" 
-              placeholder="Pesquisar por Nome ou ID do cliente..."
-              @keyup.enter="handleSearch"
-            />
-            <i
-              v-if="searchQuery"
-              class="fa-solid fa-xmark clear-icon"
-              @click="clearInput"
-              title="Limpar pesquisa"
-            ></i>
+            <input v-model="searchQuery" type="text" placeholder="Pesquisar por Nome ou ID do cliente..."
+              @keyup.enter="handleSearch" />
+            <i v-if="searchQuery" class="fa-solid fa-xmark clear-icon" @click="clearInput" title="Limpar pesquisa"></i>
           </div>
           <button class="btn-primary" @click="handleSearch" :disabled="isLoading">
             <i v-if="isLoading" class="fa-solid fa-circle-notch fa-spin"></i>
             <span v-else>Pesquisar</span>
           </button>
-          
+
           <Transition name="slide-btn">
             <button v-if="activeClient" class="btn-secondary" @click="clearSearch">
               <i class="fa-solid fa-arrow-left"></i> Voltar
@@ -39,7 +30,7 @@
 
       <main class="finance-content">
         <Transition name="fade-slide" mode="out-in">
-          
+
           <div v-if="!isLoading && !activeClient && searchResults.length > 0" class="search-results-box" key="results">
             <h3 class="section-title">Resultados da Pesquisa</h3>
             <div class="table-responsive">
@@ -70,7 +61,7 @@
           </div>
 
           <div v-else-if="!isLoading && activeClient" class="client-dashboard" key="dashboard">
-            
+
             <div class="dashboard-top-row">
               <div class="panel-card client-info-card">
                 <div class="card-header-flex">
@@ -83,12 +74,13 @@
                   <div class="client-list-header">
                     <span class="detail-label col-left">Nome do Cliente</span>
                     <span class="detail-label col-right">Responsável</span>
-                    <span class="detail-label col-date">Última Venda</span> </div>
+                    <span class="detail-label col-date">Última Venda</span>
+                  </div>
 
                   <div class="client-list-item" v-for="client in activeGroupClients" :key="client.id">
                     <span class="list-name">{{ client.name }}</span>
                     <span class="list-group">{{ client.group }}</span>
-                    
+
                     <span class="list-date">
                       <template v-if="client.lastSale">{{ client.lastSale }}</template>
                       <template v-else><span class="empty-data">Sem vendas</span></template>
@@ -98,7 +90,12 @@
               </div>
 
               <div class="panel-card atendimentos-card">
-                <h3 class="panel-title">Atendimentos</h3>
+                <div class="card-header-flex">
+                  <h3 class="panel-title">Atendimentos</h3>
+                  <button class="btn-icon-green" title="Novo Atendimento" @click="openNewAtendimentoModal">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
                 <div class="timeline">
                   <div class="timeline-item" v-for="atd in atendimentos" :key="atd.id">
                     <div class="timeline-dot"></div>
@@ -113,7 +110,7 @@
             </div>
 
             <div class="financial-lists">
-              
+
               <div class="accordion-item" :class="{ 'open': activeAccordion === 'contratos' }">
                 <div class="accordion-header" @click="toggleAccordion('contratos')">
                   <h4 class="accordion-title">
@@ -175,7 +172,7 @@
                           <th class="col-name">Nome</th>
                           <th class="col-cpf text-center">CPF / CNPJ</th>
                           <th class="col-doc-short text-center">Doc</th>
-                          <th class="col-name">Correntista</th> 
+                          <th class="col-name">Correntista</th>
                           <th class="col-date text-center">Recebimento</th>
                           <th class="col-date text-center">Bom Para</th>
                           <th class="col-money">Valor</th>
@@ -259,7 +256,8 @@
 
           </div>
 
-          <div v-else-if="!isLoading && hasSearched && searchResults.length === 0" class="empty-search-state" key="not-found">
+          <div v-else-if="!isLoading && hasSearched && searchResults.length === 0" class="empty-search-state"
+            key="not-found">
             <i class="fa-solid fa-magnifying-glass-minus empty-icon" style="color: #ef4444; opacity: 0.8;"></i>
             <h2>Nenhum resultado encontrado</h2>
             <p>Não encontramos nenhum cliente com "{{ lastSearchedTerm }}".</p>
@@ -272,8 +270,8 @@
           </div>
 
           <div v-else class="empty-search-state" key="loading">
-             <i class="fa-solid fa-circle-notch fa-spin empty-icon" style="color: #10b981; opacity: 1;"></i>
-             <h2 style="color: #10b981;">Buscando dados...</h2>
+            <i class="fa-solid fa-circle-notch fa-spin empty-icon" style="color: #10b981; opacity: 1;"></i>
+            <h2 style="color: #10b981;">Buscando dados...</h2>
           </div>
 
         </Transition>
@@ -286,7 +284,9 @@
                 <h2 class="modal-title">Limites e Saldos</h2>
                 <div class="subtitle-row">
                   <p class="modal-subtitle">Visão consolidada do grupo: {{ activeClient?.group }}</p>
-                  <span class="modal-calc-note">Cálculo de Limite e Saldo Calculado: (Total de Vendas - Total de Devoluções) * 0.3</span>
+                  <span class="modal-calc-note">Cálculo de Limite e Saldo Calculado: (Total de Vendas - Total de
+                    Devoluções) *
+                    0.3</span>
                 </div>
               </div>
               <button class="modal-close-btn" @click="closeLimitsModal">
@@ -312,7 +312,8 @@
                   <tr v-for="client in activeGroupClients" :key="client.id">
                     <td class="col-name text-left fw-bold">{{ client.name }}</td>
                     <td class="text-right">{{ formatCurrency(client.limiteBm) }}</td>
-                    <td class="text-right" :class="{'text-red': client.saldoBm < 0}">{{ formatCurrency(client.saldoBm) }}</td>
+                    <td class="text-right" :class="{ 'text-red': client.saldoBm < 0 }">{{ formatCurrency(client.saldoBm)
+                      }}</td>
                     <td class="text-right">{{ formatCurrency(client.limiteCalculado) }}</td>
                     <td class="text-right">{{ formatCurrency(client.saldoCalculado) }}</td>
                     <td class="text-center">{{ client.maiorAtraso }}d</td>
@@ -330,7 +331,9 @@
               </div>
               <div class="modal-total-item text-center">
                 <span class="modal-total-label">Total Sld. BM</span>
-                <span class="modal-total-value" :class="{'emerald': totalGroupLimits.saldoBm > 0, 'text-red': totalGroupLimits.saldoBm < 0}">{{ formatCurrency(totalGroupLimits.saldoBm) }}</span>
+                <span class="modal-total-value"
+                  :class="{ 'emerald': totalGroupLimits.saldoBm > 0, 'text-red': totalGroupLimits.saldoBm < 0 }">{{
+                    formatCurrency(totalGroupLimits.saldoBm) }}</span>
               </div>
               <div class="modal-total-item text-center">
                 <span class="modal-total-label">Total Lim. Calc.</span>
@@ -338,7 +341,9 @@
               </div>
               <div class="modal-total-item text-center">
                 <span class="modal-total-label">Total Sld. Calc.</span>
-                <span class="modal-total-value" :class="{'emerald': totalGroupLimits.saldoCalculado > 0, 'text-red': totalGroupLimits.saldoCalculado < 0}">{{ formatCurrency(totalGroupLimits.saldoCalculado) }}</span>
+                <span class="modal-total-value"
+                  :class="{ 'emerald': totalGroupLimits.saldoCalculado > 0, 'text-red': totalGroupLimits.saldoCalculado < 0 }">{{
+                    formatCurrency(totalGroupLimits.saldoCalculado) }}</span>
               </div>
               <div class="modal-total-item text-center">
                 <span class="modal-total-label">Média Atraso<br><small>(Grupo)</small></span>
@@ -356,6 +361,52 @@
           </div>
         </div>
       </Transition>
+
+      <Transition name="modal-fade">
+        <div v-if="showNewAtendimentoModal" class="modal-overlay" @click.self="closeNewAtendimentoModal">
+          <div class="modal-content modal-sm">
+            <header class="modal-header">
+              <div class="modal-header-info">
+                <h2 class="modal-title">Novo Atendimento</h2>
+                <p class="modal-subtitle">Registrar histórico para o grupo: {{ activeClient?.group }}</p>
+              </div>
+              <button class="modal-close-btn" @click="closeNewAtendimentoModal">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </header>
+
+            <div class="modal-body form-body">
+              <div class="form-group">
+                <label>Vincular ao Cliente</label>
+                <CustomSelect v-model="formAtendimento.client" :options="activeGroupClients.map(c => c.name)"
+                  placeholder="Selecione um cliente do grupo..." />
+              </div>
+
+              <div class="form-group">
+                <label>Observação</label>
+                <textarea v-model="formAtendimento.obs" class="form-control" rows="4"
+                  placeholder="Detalhes do atendimento realizado..."></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Data do Atendimento</label>
+                  <input type="date" v-model="formAtendimento.date" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Agendar Retorno / Notificação</label>
+                  <input type="date" v-model="formAtendimento.scheduleDate" class="form-control" />
+                </div>
+              </div>
+            </div>
+
+            <footer class="modal-footer flex-end">
+              <button class="btn-cancel" @click="closeNewAtendimentoModal">Cancelar</button>
+              <button class="btn-primary" @click="closeNewAtendimentoModal">Registrar</button>
+            </footer>
+          </div>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -363,6 +414,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import financeService from '@/services/financeService';
+import CustomSelect from '@/components/common/CustomSelect.vue';
 
 const searchQuery = ref('');
 const lastSearchedTerm = ref('');
@@ -370,7 +422,16 @@ const searchResults = ref([]);
 const activeClient = ref(null);
 const isLoading = ref(false);
 const hasSearched = ref(false);
+
 const showLimitsModal = ref(false);
+const showNewAtendimentoModal = ref(false);
+
+const formAtendimento = ref({
+  client: '',
+  obs: '',
+  date: '',
+  scheduleDate: ''
+});
 
 const activeGroupClients = ref([]);
 const atendimentos = ref([]);
@@ -386,7 +447,15 @@ const closeLimitsModal = () => {
   showLimitsModal.value = false;
 };
 
-// Substitua o computed totalGroupLimits por este:
+const openNewAtendimentoModal = () => {
+  formAtendimento.value = { client: '', obs: '', date: '', scheduleDate: '' };
+  showNewAtendimentoModal.value = true;
+};
+
+const closeNewAtendimentoModal = () => {
+  showNewAtendimentoModal.value = false;
+};
+
 const totalGroupLimits = computed(() => {
   const totals = activeGroupClients.value.reduce((acc, client) => {
     return {
@@ -439,13 +508,13 @@ const handleSearch = async () => {
   try {
     const results = await financeService.searchClients(query);
     searchResults.value = results;
-    
+
     if (results.length === 1) {
       await openClient(results[0]);
     } else {
       searchResults.value = results;
     }
-    
+
     hasSearched.value = true;
   } catch (error) {
     console.error("Erro ao pesquisar clientes:", error);
@@ -456,10 +525,10 @@ const handleSearch = async () => {
 
 const openClient = async (client) => {
   isLoading.value = true;
-  
+
   try {
     const dashboardData = await financeService.getClientDashboard(client);
-    
+
     activeGroupClients.value = [...dashboardData.groupClients];
     atendimentos.value = [...dashboardData.atendimentos];
     contratos.value = [...dashboardData.contratos];
