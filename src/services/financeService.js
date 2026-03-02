@@ -1,8 +1,8 @@
 import api from '@/api/api';
 
 const mockClientsDatabase = [
-  { id: 101, name: "THIAGO FARIAS LIMA", document: "111.222.333-44", group: "THIAGO FARIAS LIMA", lastSale: "25/02/2026" },
-  { id: 102, name: "MURILO DE SOUZA", document: "999.888.777-66", group: "THIAGO FARIAS LIMA", lastSale: null },
+  { id: 101, name: "THIAGO FARIAS LIMA", document: "111.222.333-44", group: "THIAGO FARIAS LIMA", lastSale: "25/02/2026", limiteCalculado: 200000, limiteBm: 150000, saldoCalculado: 50000, saldoBm: -10000, maiorAtraso: 45, atraso90Dias: 2, mediaAtraso: 15 },
+  { id: 102, name: "MURILO DE SOUZA", document: "999.888.777-66", group: "THIAGO FARIAS LIMA", lastSale: null, limiteCalculado: 50000, limiteBm: 50000, saldoCalculado: 50000, saldoBm: 50000, maiorAtraso: 0, atraso90Dias: 0, mediaAtraso: 0 },
 ];
 
 const mockAtendimentos = [

@@ -75,7 +75,7 @@
               <div class="panel-card client-info-card">
                 <div class="card-header-flex">
                   <h3 class="panel-title">Painel do Grupo</h3>
-                  <button class="btn-icon-green" title="Ver Limites e Saldos">
+                  <button class="btn-icon-green" title="Ver Limites e Saldos" @click="openLimitsModal">
                     <i class="fa-solid fa-chart-pie"></i>
                   </button>
                 </div>
@@ -278,7 +278,84 @@
 
         </Transition>
       </main>
+      <Transition name="modal-fade">
+        <div v-if="showLimitsModal" class="modal-overlay" @click.self="closeLimitsModal">
+          <div class="modal-content">
+            <header class="modal-header">
+              <div class="modal-header-info">
+                <h2 class="modal-title">Limites e Saldos</h2>
+                <div class="subtitle-row">
+                  <p class="modal-subtitle">Visão consolidada do grupo: {{ activeClient?.group }}</p>
+                  <span class="modal-calc-note">Cálculo de Limite e Saldo Calculado: (Total de Vendas - Total de Devoluções) * 0.3</span>
+                </div>
+              </div>
+              <button class="modal-close-btn" @click="closeLimitsModal">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </header>
 
+            <div class="modal-body">
+              <table class="alembro-table modal-table">
+                <thead>
+                  <tr>
+                    <th class="col-name text-left">Cliente</th>
+                    <th class="col-money text-right">Limite BM</th>
+                    <th class="col-money text-right">Saldo BM</th>
+                    <th class="col-money text-right">Lim. Calc.</th>
+                    <th class="col-money text-right">Sld. Calc.</th>
+                    <th class="col-center" style="width: 10rem;">Maior Atraso</th>
+                    <th class="col-center" style="width: 12rem;">Atraso 90 Dias</th>
+                    <th class="col-center" style="width: 12rem;">Média Atraso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="client in activeGroupClients" :key="client.id">
+                    <td class="col-name text-left fw-bold">{{ client.name }}</td>
+                    <td class="text-right">{{ formatCurrency(client.limiteBm) }}</td>
+                    <td class="text-right" :class="{'text-red': client.saldoBm < 0}">{{ formatCurrency(client.saldoBm) }}</td>
+                    <td class="text-right">{{ formatCurrency(client.limiteCalculado) }}</td>
+                    <td class="text-right">{{ formatCurrency(client.saldoCalculado) }}</td>
+                    <td class="text-center">{{ client.maiorAtraso }}d</td>
+                    <td class="text-center">{{ client.atraso90Dias }}</td>
+                    <td class="text-center">{{ client.mediaAtraso }}d</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <footer class="modal-footer">
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Total Lim. BM</span>
+                <span class="modal-total-value">{{ formatCurrency(totalGroupLimits.limiteBm) }}</span>
+              </div>
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Total Sld. BM</span>
+                <span class="modal-total-value" :class="{'emerald': totalGroupLimits.saldoBm > 0, 'text-red': totalGroupLimits.saldoBm < 0}">{{ formatCurrency(totalGroupLimits.saldoBm) }}</span>
+              </div>
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Total Lim. Calc.</span>
+                <span class="modal-total-value">{{ formatCurrency(totalGroupLimits.limiteCalculado) }}</span>
+              </div>
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Total Sld. Calc.</span>
+                <span class="modal-total-value" :class="{'emerald': totalGroupLimits.saldoCalculado > 0, 'text-red': totalGroupLimits.saldoCalculado < 0}">{{ formatCurrency(totalGroupLimits.saldoCalculado) }}</span>
+              </div>
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Média Atraso<br><small>(Grupo)</small></span>
+                <span class="modal-total-value">{{ totalGroupLimits.mediaMaiorAtraso }}d</span>
+              </div>
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Média 90 Dias<br><small>(Grupo)</small></span>
+                <span class="modal-total-value">{{ totalGroupLimits.mediaAtraso90Dias }}</span>
+              </div>
+              <div class="modal-total-item text-center">
+                <span class="modal-total-label">Média Geral<br><small>(Grupo)</small></span>
+                <span class="modal-total-value">{{ totalGroupLimits.mediaAtrasoGeral }}d</span>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -293,12 +370,47 @@ const searchResults = ref([]);
 const activeClient = ref(null);
 const isLoading = ref(false);
 const hasSearched = ref(false);
+const showLimitsModal = ref(false);
 
 const activeGroupClients = ref([]);
 const atendimentos = ref([]);
 const contratos = ref([]);
 const cheques = ref([]);
 const notas = ref([]);
+
+const openLimitsModal = () => {
+  showLimitsModal.value = true;
+};
+
+const closeLimitsModal = () => {
+  showLimitsModal.value = false;
+};
+
+// Substitua o computed totalGroupLimits por este:
+const totalGroupLimits = computed(() => {
+  const totals = activeGroupClients.value.reduce((acc, client) => {
+    return {
+      limiteCalculado: acc.limiteCalculado + (client.limiteCalculado || 0),
+      limiteBm: acc.limiteBm + (client.limiteBm || 0),
+      saldoCalculado: acc.saldoCalculado + (client.saldoCalculado || 0),
+      saldoBm: acc.saldoBm + (client.saldoBm || 0),
+      maiorAtraso: acc.maiorAtraso + (client.maiorAtraso || 0),
+      atraso90Dias: acc.atraso90Dias + (client.atraso90Dias || 0),
+      mediaAtraso: acc.mediaAtraso + (client.mediaAtraso || 0),
+      count: acc.count + 1
+    };
+  }, { limiteCalculado: 0, limiteBm: 0, saldoCalculado: 0, saldoBm: 0, maiorAtraso: 0, atraso90Dias: 0, mediaAtraso: 0, count: 0 });
+
+  return {
+    limiteCalculado: totals.limiteCalculado,
+    limiteBm: totals.limiteBm,
+    saldoCalculado: totals.saldoCalculado,
+    saldoBm: totals.saldoBm,
+    mediaMaiorAtraso: totals.count ? Math.round(totals.maiorAtraso / totals.count) : 0,
+    mediaAtraso90Dias: totals.count ? Math.round(totals.atraso90Dias / totals.count) : 0,
+    mediaAtrasoGeral: totals.count ? Math.round(totals.mediaAtraso / totals.count) : 0
+  };
+});
 
 const activeAccordion = ref('');
 const toggleAccordion = (section) => {
