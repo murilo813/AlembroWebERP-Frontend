@@ -83,11 +83,16 @@
                   <div class="client-list-header">
                     <span class="detail-label col-left">Nome do Cliente</span>
                     <span class="detail-label col-right">Responsável</span>
-                  </div>
+                    <span class="detail-label col-date">Última Venda</span> </div>
 
                   <div class="client-list-item" v-for="client in activeGroupClients" :key="client.id">
                     <span class="list-name">{{ client.name }}</span>
                     <span class="list-group">{{ client.group }}</span>
+                    
+                    <span class="list-date">
+                      <template v-if="client.lastSale">{{ client.lastSale }}</template>
+                      <template v-else><span class="empty-data">Sem vendas</span></template>
+                    </span>
                   </div>
                 </div>
               </div>

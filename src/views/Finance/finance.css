@@ -301,69 +301,75 @@
   font-size: 2.2rem;
   font-weight: 800;
 }
+/* PAINEL DO GRUPO */
 .client-list-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-bottom: 0.1rem solid rgba(255, 255, 255, 0.1);
   padding-bottom: 1rem;
   margin-bottom: 0.5rem;
   gap: 2rem;
 }
-
-.client-list-header .col-left,
-.list-name {
-  flex: 3; 
-  text-align: left;
-}
-
-.client-list-header .col-right,
-.client-list-item .list-group {
-  flex: 1; 
-  display: flex;
-  justify-content: center; 
-  align-items: center;
-}
-
 .client-list-item {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; 
+  align-items: center; 
   padding: 1.5rem 0;
   border-bottom: 0.1rem solid rgba(255, 255, 255, 0.04);
   gap: 2rem; 
 }
-
-.client-list-item .list-group {
-  display: flex;
-  justify-content: center; 
-  flex: 1;
-  color: #94a3b8;
-  font-size: 1.3rem;
-  font-weight: 500;
-  text-align: center; 
-  word-wrap: break-word;
-}
 .client-list-item:last-child {
   border-bottom: none;
+}
+
+/* NOME DO CLIENTE */
+.client-list-header .col-left,
+.list-name {
+  flex: 1; 
+  text-align: left;
+  word-wrap: break-word;
 }
 .list-name {
   color: #10b981;
   font-size: 1.8rem; 
   font-weight: 800;
-  flex: 3;
-  text-align: left;
-  word-wrap: break-word;
 }
 
+/* RESPONSÁVEL */
+.client-list-header .col-right,
+.list-group {
+  width: 15rem; 
+  flex-shrink: 0;
+  text-align: center; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .list-group {
   color: #94a3b8; 
   font-size: 1.3rem; 
   font-weight: 500;
-  flex: 1;
-  text-align: right;
   word-wrap: break-word; 
 }
 
+/* ÚLTIMA VENDA */
+.client-list-header .col-date,
+.list-date {
+  width: 11rem; 
+  flex-shrink: 0; 
+  text-align: right; 
+}
+.list-date {
+  color: #cbd5e1;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.list-date .empty-data {
+  color: #ef4444; 
+  font-style: italic;
+  font-size: 1.3rem;
+}
 
 /* LINHA DO TEMPO (ATENDIMENTOS) */
 .atendimentos-card {
