@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/Login/LoginView.vue';
 import HomeView from '@/views/Home/HomeView.vue';
 import FinanceView from '@/views/Finance/FinanceView.vue';
+import ContractsView from '@/views/Contracts/ContractsView.vue';
 import StockView from '@/views/Stock/StockView.vue';
 import ExpensesView from '@/views/Expenses/ExpensesView.vue';
 import ManagementView from '@/views/Management/ManagementView.vue';
@@ -15,6 +16,11 @@ const routes = [
     path: '/finance',
     component: FinanceView,
     meta: { module: 'finance' }
+  },
+    {
+    path: '/contracts',
+    component: ContractsView,
+    meta: { module: 'contracts' }
   },
   {
     path: '/stock',

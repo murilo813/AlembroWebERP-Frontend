@@ -14,6 +14,13 @@
         >Financeiro</RouterLink>
 
         <RouterLink 
+          to="/contracts" 
+          class="nav-link" 
+          :class="{ 'nav-disabled': !hasAccess('contracts') }"
+          @click="!hasAccess('contracts') && deny('Contratos')"
+        >Contratos</RouterLink>
+
+        <RouterLink 
           to="/stock" 
           class="nav-link" 
           :class="{ 'nav-disabled': !hasAccess('stock') }"

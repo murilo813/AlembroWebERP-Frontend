@@ -14,12 +14,11 @@ export const USER_TYPES = {
     v_externo: 'Vendedor',
     caixa: 'Caixa',
     estoque: 'Estoque'
-    
 };
 export const ROLE_PERMISSIONS = {
-    admin: ['home', 'finance', 'stock', 'expenses', 'management'],
-    gerente: ['home', 'finance', 'stock', 'expenses', 'management'],
-    financeiro: ['home', 'finance'],
+    admin: ['home', 'finance', 'stock', 'expenses', 'management', 'contracts'],
+    gerente: ['home', 'finance', 'stock', 'expenses', 'management', 'contracts'],
+    financeiro: ['home', 'finance', 'contracts'],
     contabil: ['home', 'finance', 'expenses'],
     compras: ['home', 'procurement'], 
     v_interno: ['home'],
