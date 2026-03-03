@@ -36,15 +36,18 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import statsService from '@/services/statsService';
+import { useToast } from '@/utils/toast';
 
 const stats = ref({ today: 0, week: 0, expired: 0 });
 const userId = localStorage.getItem('userId');
+const { showToast } = useToast();
 
 const fetchStats = async () => {
   try {
     stats.value = await statsService.getBillsStats(userId);
   } catch (e) {
-    console.error("Erro ao carregar stats financeiro:", e);
+    showToast("Erro ao carregar estatísticas financeiras", "error");
+    console.error(e);
   }
 };
 

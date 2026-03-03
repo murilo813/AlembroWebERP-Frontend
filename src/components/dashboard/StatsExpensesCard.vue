@@ -42,9 +42,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import statsService from '@/services/statsService';
+import { useToast } from '@/utils/toast';
 
 const stats = ref({ today: 0, week: 0, month: 0 });
 const userId = localStorage.getItem('userId');
+const { showToast } = useToast();
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -69,7 +71,8 @@ const fetchStats = async () => {
   try {
     stats.value = await statsService.getExpensesStats(userId);
   } catch (e) {
-    console.error("Erro ao buscar stats de gastos:", e);
+    showToast("Erro ao carregar estatísticas contábeis", "error");
+    console.error(e);
   }
 };
 
