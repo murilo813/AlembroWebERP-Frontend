@@ -5,6 +5,12 @@
     <main :class="['main-content', { 'system-bg': isLogged }]">
       <RouterView />
     </main>
+
+    <Toast 
+      :show="toast.show" 
+      :message="toast.message" 
+      :type="toast.type" 
+    />
   </div>
 </template>
 
@@ -12,9 +18,13 @@
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
+import Toast from '@/components/common/Toast.vue';
+import { useToast } from '@/utils/toast';
 
 const route = useRoute();
 const isLogged = ref(false);
+
+const { toast } = useToast();
 
 watchEffect(() => {
   isLogged.value = route.path !== '/login';
