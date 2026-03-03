@@ -2,7 +2,7 @@
   <div class="custom-select" :class="{ 'is-open': isOpen }">
     <div class="select-trigger" @click="toggleDropdown">
       <span :class="{ 'placeholder': !modelValue }">
-        {{ modelValue || placeholder }}
+        {{ selectedLabel || placeholder }}
       </span>
       <i class="fa-solid fa-chevron-down arrow"></i>
     </div>
@@ -13,10 +13,10 @@
           v-for="(option, index) in options" 
           :key="index" 
           class="option-item"
-          :class="{ 'selected': modelValue === option }"
+          :class="{ 'selected': isSelected(option) }"
           @click="selectOption(option)"
         >
-          {{ option }}
+          {{ typeof option === 'object' ? option.label : option }}
         </div>
       </div>
     </Transition>
@@ -27,33 +27,38 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: ''
-  },
-  options: {
-    type: Array,
-    default: () => []
-  },
-  placeholder: {
-    type: String,
-    default: 'Selecione...'
-  }
+  modelValue: { type: [String, Number], default: '' },
+  options: { type: Array, default: () => [] },
+  placeholder: { type: String, default: 'Selecione...' }
 });
 
 const emit = defineEmits(['update:modelValue']);
-
 const isOpen = ref(false);
+
+const selectedLabel = computed(() => {
+  if (!props.modelValue) return null;
+  const found = props.options.find(opt => {
+    const val = typeof opt === 'object' ? opt.value : opt;
+    return val === props.modelValue;
+  });
+  return typeof found === 'object' ? found.label : found;
+});
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
+const isSelected = (option) => {
+  const val = typeof option === 'object' ? option.value : option;
+  return props.modelValue === val;
+};
+
 const selectOption = (option) => {
-  emit('update:modelValue', option);
+  const val = typeof option === 'object' ? option.value : option;
+  emit('update:modelValue', val);
   isOpen.value = false;
 };
 </script>

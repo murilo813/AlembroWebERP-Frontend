@@ -338,6 +338,6 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator:hover {
 .text-center { text-align: center !important; }
 .text-red { color: #ef4444 !important; }
 .emerald { color: #10b981 !important; }
-.fw-bold { font-weight: 700 !important; color: #f8fafc !important; }
+.fw-bold { font-weight: 700 !important; }
 .flex-end { justify-content: flex-end; }
 .empty-data { color: #ef4444; font-style: italic; font-size: 1.2rem; }
