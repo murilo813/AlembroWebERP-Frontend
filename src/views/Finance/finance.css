@@ -243,7 +243,28 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+.timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #64748b; 
+  gap: 1.5rem;
+  padding: 4rem 2rem;
+  text-align: center;
+}
 
+.timeline-empty i {
+  font-size: 3.2rem;
+  opacity: 0.3;
+}
+
+.timeline-empty p {
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-style: italic;
+}
 .timeline::-webkit-scrollbar {
   width: 0.6rem;
 }
