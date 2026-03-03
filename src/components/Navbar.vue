@@ -60,8 +60,6 @@
         <button @click="logout" class="logout-minimal">Sair</button>
       </div>
     </nav>
-
-    <Toast :show="toast.show" :message="toast.message" />
   </div>
 </template>
 
@@ -69,22 +67,13 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { COMPANIES, USER_TYPES, ROLE_PERMISSIONS } from '@/utils/constants';
-import Toast from '@/components/common/Toast.vue';
+import { useToast } from '@/utils/toast';
 
 const router = useRouter();
+const { showToast } = useToast();
 
-const toast = ref({ show: false, message: '' });
 const deny = (module) => {
-  toast.value.show = false;
-  
-  setTimeout(() => {
-    toast.value.message = `Acesso negado ao setor: ${module}`;
-    toast.value.show = true;
-
-    setTimeout(() => {
-      toast.value.show = false;
-    }, 3000);
-  }, 10);
+  showToast(`Acesso negado ao setor: ${module}`, "error");
 };
 const companyId = localStorage.getItem('companyId');
 const companyName = ref(COMPANIES[Number(companyId)] || 'Indefinido');
