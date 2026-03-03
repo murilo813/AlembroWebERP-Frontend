@@ -416,7 +416,9 @@
 import { ref } from 'vue';
 import financeService from '@/services/financeService';
 import CustomSelect from '@/components/common/CustomSelect.vue';
+import { useToast } from '@/utils/toast';
 
+const { showToast } = useToast();
 const searchQuery = ref('');
 const lastSearchedTerm = ref('');
 const searchResults = ref([]);
@@ -492,7 +494,7 @@ const handleSearch = async () => {
       searchResults.value = results;
     }
   } catch (error) {
-    console.error("Erro ao pesquisar clientes:", error);
+    showToast("Erro na comunicação com o servidor.", "error");
   } finally {
     isLoading.value = false;
   }
@@ -520,7 +522,8 @@ const openClient = async (client) => {
 
     activeClient.value = client;
   } catch (error) {
-    console.error("Erro ao abrir painel do cliente:", error);
+    showToast("Erro ao carregar dados do grupo. Verifique sua conexão.", "error");
+    console.error(error);
   } finally {
     isFetchingClient.value = false;
   }
@@ -528,7 +531,7 @@ const openClient = async (client) => {
 
 const handleSaveObservation = async () => {
   if (!collectionForm.value.client || !collectionForm.value.obs || !collectionForm.value.date) {
-    alert("Selecione o cliente, digite a observação e informe a data!");
+    showToast("Preencha todos os campos obrigatórios!", "error");
     return;
   }
 
@@ -547,7 +550,6 @@ const handleSaveObservation = async () => {
 
   try {
     const selectedClientId = collectionForm.value.client;
-
     await financeService.saveObservation(selectedClientId, payload);
 
     const clientNameSelected = activeGroupClients.value.find(c => c.id === selectedClientId)?.name || "Cliente";
@@ -563,11 +565,11 @@ const handleSaveObservation = async () => {
 
     closeNewCollectionModal();
 
-    // Se quiser, bota um Toast de sucesso aqui depois!
-    console.log("Atendimento salvo com sucesso!");
+    showToast("Atendimento registrado com sucesso!", "success");
 
   } catch (error) {
-    alert("Erro ao registrar atendimento. Verifique o console.");
+    showToast("Erro ao salvar atendimento. Tente novamente.", "error");
+    console.error(error);
   } finally {
     isSavingObs.value = false;
   }
