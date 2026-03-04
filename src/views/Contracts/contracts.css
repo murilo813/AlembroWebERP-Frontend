@@ -1,16 +1,178 @@
-.contract-placeholder {
-  height: 100vh;
-  width: 100vw;
-  color: #fff;
+.contracts-container {
+  padding: 10rem 4rem 4rem;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: 2rem;
 }
 
-h1 {
+.contracts-wrapper {
+  width: 100%;
+  max-width: 160rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.contracts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 0.1rem solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 2rem;
+}
+
+.main-title {
+  color: #f8fafc;
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: -0.1rem;
+  margin: 0;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* acordeoes */
+.financial-lists {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.accordion-item {
+  background: #1e293b;
+  border: 0.1rem solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.6rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.accordion-item.open {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.accordion-header {
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.accordion-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.accordion-title {
+  color: #f8fafc;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  transition: color 0.3s ease;
+}
+
+.accordion-item.open .accordion-title {
   color: #10b981;
-  font-size: 4rem;
-  margin-bottom: 1rem;
+}
+
+.accordion-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.list-total {
+  color: #10b981;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.toggle-icon {
+  color: #64748b;
+  transition: transform 0.3s;
+}
+
+.accordion-item.open .toggle-icon {
+  transform: rotate(180deg);
+  color: #10b981;
+}
+
+.accordion-body-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.accordion-item.open .accordion-body-wrapper {
+  grid-template-rows: 1fr;
+}
+
+.accordion-body {
+  overflow: hidden;
+  padding: 0 2rem;
+  background: rgba(0, 0, 0, 0.1);
+  transition: padding 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+  opacity: 0;
+  border-top: 0.1rem solid transparent;
+}
+
+.accordion-item.open .accordion-body {
+  padding: 2rem;
+  opacity: 1;
+  border-top-color: rgba(255, 255, 255, 0.05);
+  padding-bottom: 2rem;
+}
+
+.type-badge {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  padding: 0.4rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.contract-table {
+  table-layout: auto !important; 
+}
+
+.contract-table th,
+.contract-table td {
+  white-space: nowrap; 
+}
+
+.contract-table .col-name {
+  width: 100%;
+  white-space: normal;
+}
+
+/* botao acao */
+.col-action {
+  width: 6rem;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  transform: scale(1.1);
 }
