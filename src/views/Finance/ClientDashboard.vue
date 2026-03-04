@@ -77,21 +77,23 @@
                 <thead>
                   <tr>
                     <th class="col-doc-short text-center">Tipo</th>
+                    <th class="col-doc-short text-left">Nome</th>
                     <th class="col-date text-center">Geração</th>
                     <th class="col-date text-center">Vencimento</th>
-                    <th class="col-money">Valor Original</th>
-                    <th class="col-money">À Receber</th>
+                    <th class="col-money text-center">Valor Original</th>
+                    <th class="col-money text-center">À Receber</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="contrato in contracts" :key="contrato.id || Math.random()">
                     <td class="text-center">{{ contrato.contractType }}</td>
+                    <td class="text-left">{{ contrato.clientName }}</td>
                     <td class="text-center">{{ formatDate(contrato.generationDate) }}</td>
                     <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(contrato.dueDate) }">
                       {{ formatDate(contrato.dueDate) }}
                     </td>
-                    <td class="">{{ formatCurrency(contrato.originalValue) }}</td>
-                    <td class="fw-bold">{{ formatCurrency(contrato.balanceDue) }}</td>
+                    <td class="text-center">{{ formatCurrency(contrato.originalValue) }}</td>
+                    <td class="fw-bold text-center">{{ formatCurrency(contrato.balanceDue) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -115,25 +117,27 @@
                 <thead>
                   <tr>
                     <th class="col-mini text-center">Emp.</th>
+                    <th class="col-name text-left">Nome</th>
                     <th class="col-doc-short text-center">Doc</th>
                     <th class="col-name">Correntista</th>
                     <th class="col-date text-center">Recebimento</th>
                     <th class="col-date text-center">Bom Para</th>
-                    <th class="col-money">Valor</th>
-                    <th class="col-money">À Receber</th>
+                    <th class="col-money text-center">Valor</th>
+                    <th class="col-money text-center">À Receber</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="cheque in checks" :key="cheque.document">
                     <td class="text-center">{{ cheque.companyId }}</td>
+                    <td class="text-left">{{ cheque.clientName }}</td>
                     <td class="text-center">{{ cheque.document }}</td>
                     <td>{{ cheque.accountHolder }}</td>
                     <td class="text-center">{{ formatDate(cheque.receiptDate) }}</td>
                     <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(cheque.goodForDate) }">
                       {{ formatDate(cheque.goodForDate) }}
                     </td>
-                    <td>{{ formatCurrency(cheque.originalValue) }}</td>
-                    <td class="fw-bold">{{ formatCurrency(cheque.balanceDue) }}</td>
+                    <td class="text-center">{{ formatCurrency(cheque.originalValue) }}</td>
+                    <td class="fw-bold text-center">{{ formatCurrency(cheque.balanceDue) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -157,25 +161,27 @@
                 <thead>
                   <tr>
                     <th class="col-mini text-center">Emp.</th>
+                    <th class="col-name text-left">Nome</th>
                     <th class="col-doc-short text-center">NFe</th>
                     <th class="col-mini text-center">Parc.</th>
                     <th class="col-date text-center">Geração</th>
                     <th class="col-date text-center">Vencimento</th>
-                    <th class="col-money">Valor</th>
-                    <th class="col-money">À Receber</th>
+                    <th class="col-money text-center">Valor</th>
+                    <th class="col-money text-center">À Receber</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="nota in bills" :key="nota.nf + '-' + nota.installment">
                     <td class="text-center">{{ nota.companyId }}</td>
+                    <td class="text-left">{{ nota.clientName }}</td>
                     <td class="text-center">{{ nota.nf }}</td>
                     <td class="text-center">{{ nota.installment }}</td>
                     <td class="text-center">{{ formatDate(nota.saleDate) }}</td>
                     <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(nota.dueDate) }">
                       {{ formatDate(nota.dueDate) }}
                     </td>
-                    <td>{{ formatCurrency(nota.originalValue) }}</td>
-                    <td class="fw-bold" :class="Number(nota.balanceDue) < 0 ? 'emerald' : ''">
+                    <td class="text-center">{{ formatCurrency(nota.originalValue) }}</td>
+                    <td class="fw-bold text-center" :class="Number(nota.balanceDue) < 0 ? 'emerald' : ''">
                       {{ formatCurrency(nota.balanceDue) }}
                     </td>
                   </tr>
