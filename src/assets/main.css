@@ -53,7 +53,7 @@ body {
 
 /* BOTOES GERAIS */
 .btn-primary {
-  background: #10b981;
+  background: var(--color-primary);
   color: #fff;
   border: 0.1rem solid transparent;
   padding: 1.2rem 2.5rem;
@@ -66,9 +66,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.8rem;      
+  line-height: 1;   
 }
+
+.btn-primary i {
+  font-size: 1.4rem;
+}
+
 .btn-primary:hover {
-  background: #059669;
+  background: var(--color-secondary);
   transform: translateY(-0.2rem);
 }
 .btn-primary:disabled {
