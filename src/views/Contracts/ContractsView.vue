@@ -4,7 +4,7 @@
 
       <header class="contracts-header">
         <div class="title-section">
-          <h1 class="main-title">Gerenciamento de Contratos</h1>
+          <h1 class="main-title">Módulo de Gerenciamento de Contratos</h1>
           <p class="subtitle">Administração, edição e criação de novos contratos globais</p>
         </div>
         <button class="btn-primary" @click="openModal(null)">
