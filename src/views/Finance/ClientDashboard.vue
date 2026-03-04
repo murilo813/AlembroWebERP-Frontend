@@ -228,8 +228,8 @@
 import { ref, onMounted, watch } from 'vue';
 import financeService from '@/services/financeService';
 import { useToast } from '@/utils/toast';
-import LimitsModal from './LimitsModal.vue';
-import CollectionModal from './CollectionModal.vue';
+import LimitsModal from '@/views/Finance/LimitsModal.vue';
+import CollectionModal from '@/views/Finance/CollectionModal.vue';
 
 const props = defineProps({
   client: { type: Object, required: true }
