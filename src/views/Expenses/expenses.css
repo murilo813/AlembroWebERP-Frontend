@@ -34,9 +34,10 @@
   font-weight: 600;
   margin-top: 0.5rem;
 }
+
 .gastos-hub-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
   gap: 3rem;
   margin-top: 2rem;
   align-items: stretch;
@@ -47,7 +48,7 @@
   --card-theme: #10b981;
   --card-theme-rgb: 16, 185, 129;
   --card-glow-grad: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  
+
   background: #1e293b;
   border: 0.1rem solid rgba(255, 255, 255, 0.05);
   border-radius: 2.4rem;
@@ -61,6 +62,7 @@
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+  animation: hubCardEntrance 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .hub-card.alert-card {
@@ -203,19 +205,66 @@
   box-shadow: 0 0.5rem 1.5rem rgba(var(--card-theme-rgb), 0.4);
 }
 
-.pulse-red { animation: pulse-alert 2s infinite; }
-.pulse-warning { animation: pulse-warn 2s infinite; }
+.pulse-red {
+  animation: pulse-alert 2s infinite;
+}
+
+.pulse-warning {
+  animation: pulse-warn 2s infinite;
+}
 
 @keyframes pulse-alert {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  70% { box-shadow: 0 0 0 1rem rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 1rem rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
 }
 
 @keyframes pulse-warn {
-  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-  70% { box-shadow: 0 0 0 1rem rgba(245, 158, 11, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 1rem rgba(245, 158, 11, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
 }
 
-.text-warning { color: #f59e0b !important; }
+@keyframes hubCardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hub-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.hub-card:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.hub-card:nth-child(3) {
+  animation-delay: 0.25s;
+}
+
+.text-warning {
+  color: #f59e0b !important;
+}
