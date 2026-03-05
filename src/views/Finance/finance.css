@@ -88,6 +88,28 @@
   transform: scale(1.1);
 }
 
+/* ESTADOS VAZIOS DA PESQUISA */
+.empty-search-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rem 0;
+  color: #475569;
+}
+
+.empty-icon {
+  font-size: 6rem;
+  margin-bottom: 2rem;
+  opacity: 0.5;
+}
+
+.empty-search-state h2 {
+  font-size: 2.4rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
 /* GRID DO DASHBOARD */
 .dashboard-top-row {
   display: grid;
