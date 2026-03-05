@@ -21,4 +21,4 @@ const props = defineProps({
 });
 </script>
 
-<style src="./LoadingSpinner.css" scoped></style>
+<style src="@/components/common/loading.css" scoped></style>
