@@ -8,8 +8,27 @@
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 62.5%; 
   background-color: #0f172a;
+  transition: font-size 0.2s ease-out; 
+}
+
+@media (max-width: 1440px) {
+  html {
+    font-size: 58%;
+  }
+}
+
+@media (max-width: 1280px) {
+  html {
+    font-size: 54%; 
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 50%;
+  }
 }
 
 :root {
