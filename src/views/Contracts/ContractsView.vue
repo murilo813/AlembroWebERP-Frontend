@@ -15,11 +15,8 @@
       <main class="contracts-content">
         <Transition name="fade-slide" mode="out-in">
 
-          <div v-if="isLoading" class="empty-search-state" key="loading">
-            <i class="fa-solid fa-circle-notch fa-spin empty-icon" style="color: #10b981; opacity: 1;"></i>
-            <h2 style="color: #10b981;">Carregando contratos...</h2>
-            <p>Sincronizando com o banco de dados</p>
-          </div>
+          <LoadingSpinner v-if="isLoading" key="loading" title="Carregando contratos..."
+            subtitle="Sincronizando com o banco de dados" />
 
           <div v-else class="financial-lists" key="content">
 
@@ -52,10 +49,8 @@
                       <tbody>
                         <tr v-for="contract in openContracts" :key="contract.id">
                           <td class="text-center" style="position: relative;">
-                            <i v-if="contract.obs" 
-                              class="fa-solid fa-circle-exclamation obs-indicator emerald" 
-                              title="Ver Observação"
-                              @click="showObs(contract.obs)">
+                            <i v-if="contract.obs" class="fa-solid fa-circle-exclamation obs-indicator emerald"
+                              title="Ver Observação" @click="showObs(contract.obs)">
                             </i>
                             {{ contract.clientId }}
                           </td>
@@ -114,10 +109,8 @@
                       <tbody>
                         <tr v-for="contract in paidContracts" :key="contract.id">
                           <td class="text-center" style="position: relative;">
-                            <i v-if="contract.obs" 
-                              class="fa-solid fa-circle-exclamation obs-indicator emerald" 
-                              title="Ver Observação"
-                              @click="showObs(contract.obs)">
+                            <i v-if="contract.obs" class="fa-solid fa-circle-exclamation obs-indicator emerald"
+                              title="Ver Observação" @click="showObs(contract.obs)">
                             </i>
                             {{ contract.clientId }}
                           </td>
@@ -152,7 +145,8 @@
 
   <Transition name="modal-fade">
     <div v-if="showObsModal" class="modal-overlay" @click.self="closeObsModal">
-      <div class="modal-content modal-sm"> <header class="modal-header">
+      <div class="modal-content modal-sm">
+        <header class="modal-header">
           <div class="modal-header-info">
             <h2 class="modal-title">Observações do Contrato</h2>
             <p class="modal-subtitle">Detalhes e anotações internas</p>
@@ -182,6 +176,7 @@ import { ref, computed, onMounted } from 'vue';
 import contractsService from '@/services/contractsService';
 import ContractModal from '@/views/Contracts/ContractModal.vue';
 import { useToast } from '@/utils/toast';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showToast } = useToast();
 
@@ -252,11 +247,11 @@ const toggleAccordion = (section) => {
   activeAccordion.value = activeAccordion.value === section ? null : section;
 };
 
-const openContracts = computed(() => 
+const openContracts = computed(() =>
   contractsList.value.filter(c => c.status === 'aberto')
 );
 
-const paidContracts = computed(() => 
+const paidContracts = computed(() =>
   contractsList.value.filter(c => c.status === 'pago')
 );
 

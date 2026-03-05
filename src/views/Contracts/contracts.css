@@ -38,32 +38,6 @@
   margin-top: 0.5rem;
 }
 
-.empty-search-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10rem 0;
-  color: #475569;
-}
-
-.empty-icon {
-  font-size: 6rem;
-  margin-bottom: 2rem;
-  opacity: 0.5;
-}
-
-.empty-search-state h2 {
-  font-size: 2.4rem;
-  color: #64748b;
-  margin-bottom: 1rem;
-}
-
-.empty-search-state p {
-  color: #94a3b8;
-  font-size: 1.4rem;
-}
-
 .financial-lists {
   display: flex;
   flex-direction: column;
