@@ -31,10 +31,8 @@
       <main class="finance-content">
         <Transition name="fade-slide" mode="out-in">
 
-          <div v-if="isLoading" class="empty-search-state" key="loading">
-            <i class="fa-solid fa-circle-notch fa-spin empty-icon" style="color: #10b981; opacity: 1;"></i>
-            <h2 style="color: #10b981;">Buscando dados...</h2>
-          </div>
+          <LoadingSpinner v-if="isLoading" key="loading" title="Buscando dados..."
+            subtitle="Conectando com o servidor financeiro" />
 
           <ClientDashboard v-else-if="activeClient" :client="activeClient" key="dashboard" />
 
@@ -85,7 +83,8 @@
 import { ref } from 'vue';
 import financeService from '@/services/financeService';
 import { useToast } from '@/utils/toast';
-import ClientDashboard from '@/views/Finance/ClientDashboard.vue'; 
+import ClientDashboard from '@/views/Finance/ClientDashboard.vue';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showToast } = useToast();
 
@@ -102,7 +101,7 @@ const handleSearch = async () => {
   const query = searchQuery.value.trim();
   lastSearchedTerm.value = query;
   isLoading.value = true;
-  activeClient.value = null; 
+  activeClient.value = null;
   hasSearched.value = false;
 
   try {

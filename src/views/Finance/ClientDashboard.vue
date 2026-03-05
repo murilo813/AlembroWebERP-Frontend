@@ -1,13 +1,10 @@
 <template>
   <div class="client-dashboard-wrapper">
-    <div v-if="isFetchingClient" class="empty-search-state">
-      <i class="fa-solid fa-circle-notch fa-spin empty-icon" style="color: #10b981; opacity: 1;"></i>
-      <h2 style="color: #10b981;">Montando painel do grupo...</h2>
-    </div>
+    <LoadingSpinner v-if="isFetchingClient" title="Montando painel do grupo..." subtitle="" />
 
     <div v-else class="client-dashboard">
       <div class="dashboard-top-row">
-        
+
         <div class="panel-card client-info-card">
           <div class="card-header-flex">
             <h3 class="panel-title">Painel do Grupo</h3>
@@ -60,7 +57,7 @@
       </div>
 
       <div class="financial-lists">
-        
+
         <div class="accordion-item" :class="{ 'open': activeAccordion === 'contracts' }">
           <div class="accordion-header" @click="toggleAccordion('contracts')">
             <h4 class="accordion-title">
@@ -230,20 +227,11 @@
 
     </div>
 
-    <LimitsModal 
-      :show="showLimitsModal" 
-      :groupInfo="activeGroupInfo" 
-      :clients="activeGroupClients" 
-      @close="showLimitsModal = false" 
-    />
-    
-    <CollectionModal 
-      :show="showNewCollectionModal" 
-      :groupInfo="activeGroupInfo" 
-      :clients="activeGroupClients" 
-      @close="showNewCollectionModal = false" 
-      @saved="addInteractionToTimeline" 
-    />
+    <LimitsModal :show="showLimitsModal" :groupInfo="activeGroupInfo" :clients="activeGroupClients"
+      @close="showLimitsModal = false" />
+
+    <CollectionModal :show="showNewCollectionModal" :groupInfo="activeGroupInfo" :clients="activeGroupClients"
+      @close="showNewCollectionModal = false" @saved="addInteractionToTimeline" />
 
   </div>
 </template>
@@ -254,6 +242,7 @@ import financeService from '@/services/financeService';
 import { useToast } from '@/utils/toast';
 import LimitsModal from '@/views/Finance/LimitsModal.vue';
 import CollectionModal from '@/views/Finance/CollectionModal.vue';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const props = defineProps({
   client: { type: Object, required: true }
@@ -280,7 +269,7 @@ const activeAccordion = ref('');
 
 const fetchDashboardData = async () => {
   if (!props.client?.id) return;
-  
+
   isFetchingClient.value = true;
   try {
     const groupData = await financeService.getClientData(props.client.id);
@@ -320,7 +309,7 @@ const addInteractionToTimeline = (newInteraction) => {
 const isOverdue = (dateString) => {
   if (!dateString) return false;
   const today = new Date();
-  today.setHours(0, 0, 0, 0); 
+  today.setHours(0, 0, 0, 0);
   const dueDate = new Date(dateString);
   dueDate.setHours(0, 0, 0, 0);
   return dueDate < today;
