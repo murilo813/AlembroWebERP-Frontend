@@ -33,12 +33,12 @@
               </div>
             </div>
 
-            <div class="hub-card" :class="{ 'alert-card': statsData.pendingEntries > 0 }">
+            <div class="hub-card" :class="{ 'alert-card': statsData.pendingEntries > 0 }" @click="irParaVinculo">
               <div class="card-glow"></div>
               <div class="icon-wrapper" :class="{ 'alert-icon': statsData.pendingEntries > 0 }">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 <span v-if="statsData.pendingEntries > 0" class="notification-badge">{{ statsData.pendingEntries
-                  }}</span>
+                }}</span>
               </div>
               <h2 class="card-title">Entradas Pendentes</h2>
               <p class="card-description">
@@ -71,7 +71,7 @@
                 <span v-if="statsData.expiredCnh > 0" class="notification-badge">{{ statsData.expiredCnh }}</span>
                 <span v-else-if="statsData.expiringCnh > 0" class="notification-badge warning-badge">{{
                   statsData.expiringCnh
-                  }}</span>
+                }}</span>
               </div>
 
               <h2 class="card-title">Gestão de Frota</h2>
@@ -117,9 +117,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import expensesService from '@/services/expensesService';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
+const router = useRouter();
 const isLoading = ref(true);
 
 const statsData = ref({
@@ -144,6 +146,10 @@ const loadStats = async () => {
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+};
+
+const irParaVinculo = () => {
+  router.push('/expenses/bind');
 };
 
 onMounted(() => {
