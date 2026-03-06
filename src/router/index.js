@@ -5,6 +5,7 @@ import FinanceView from '@/views/Finance/FinanceView.vue';
 import ContractsView from '@/views/Contracts/ContractsView.vue';
 import StockView from '@/views/Stock/StockView.vue';
 import ExpensesView from '@/views/Expenses/ExpensesView.vue';
+import ExpensesBind from '@/views/Expenses/ExpensesBind.vue';
 import ManagementView from '@/views/Management/ManagementView.vue';
 import { ROLE_PERMISSIONS } from '@/utils/constants';
 
@@ -31,6 +32,11 @@ const routes = [
     path: '/expenses',
     component: ExpensesView,
     meta: { module: 'expenses' }
+  },
+  {
+    path: '/expenses/bind', 
+    component: ExpensesBind,
+    meta: { module: 'expenses' } 
   },
   {
     path: '/management',
