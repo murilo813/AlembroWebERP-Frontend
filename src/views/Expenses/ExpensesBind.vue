@@ -1,8 +1,8 @@
 <template>
-  <div class="gastos-container">
-    <div class="gastos-wrapper">
+  <div class="expenses-container">
+    <div class="expenses-wrapper">
 
-      <header class="gastos-header">
+      <header class="expenses-header">
         <div class="title-section">
           <h1 class="main-title">Módulo de Gastos</h1>
           <p class="subtitle">Conciliação de entradas pendentes.</p>
@@ -13,7 +13,7 @@
         </button>
       </header>
 
-      <main class="gastos-content">
+      <main class="expenses-content">
         <div class="pending-split-view">
 
           <aside class="pending-sidebar">

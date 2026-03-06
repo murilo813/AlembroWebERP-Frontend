@@ -26,6 +26,11 @@ export const ROLE_PERMISSIONS = {
     caixa: ['home', 'finance'],
     estoque: ['home']
 };
+export const EXPENSES_SUB_PERMISSIONS = {
+    admin: ['data', 'bind'],
+    gerente: ['data'], 
+    contabil: ['data', 'bind'],
+};
 export const DASHBOARD_CARDS = {
     admin: ['collections', 'expenses'],
     gerente: ['collections', 'expenses'],
