@@ -6,40 +6,12 @@
       <div class="nav-links">
         <RouterLink to="/home" class="nav-link">Início</RouterLink>
 
-        <RouterLink 
-          to="/finance" 
-          class="nav-link" 
-          :class="{ 'nav-disabled': !hasAccess('finance') }"
-          @click="!hasAccess('finance') && deny('Financeiro')"
-        >Financeiro</RouterLink>
-
-        <RouterLink 
-          to="/contracts" 
-          class="nav-link" 
-          :class="{ 'nav-disabled': !hasAccess('contracts') }"
-          @click="!hasAccess('contracts') && deny('Contratos')"
-        >Contratos</RouterLink>
-
-        <RouterLink 
-          to="/stock" 
-          class="nav-link" 
-          :class="{ 'nav-disabled': !hasAccess('stock') }"
-          @click="!hasAccess('stock') && deny('Estoque')"
-        >Estoque</RouterLink>
-
-        <RouterLink 
-          to="/expenses" 
-          class="nav-link" 
-          :class="{ 'nav-disabled': !hasAccess('expenses') }"
-          @click="!hasAccess('expenses') && deny('Gastos')"
-        >Gastos</RouterLink>
-
-        <RouterLink 
-          to="/management" 
-          class="nav-link" 
-          :class="{ 'nav-disabled': !hasAccess('management') }"
-          @click="!hasAccess('management') && deny('Gerenciamento')"
-        >Gerenciamento</RouterLink>
+        <RouterLink v-for="link in navLinks" :key="link.path" :to="link.path" class="nav-link" :class="{
+          'nav-disabled': !hasAccess(link.module),
+          'router-link-active': route.path.startsWith(link.path)
+        }" @click="!hasAccess(link.module) && deny(link.label)">
+          {{ link.label }}
+        </RouterLink>
       </div>
 
       <div class="nav-user">
@@ -72,16 +44,26 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { COMPANIES, USER_TYPES, ROLE_PERMISSIONS } from '@/utils/constants';
 import { useToast } from '@/utils/toast';
 
 const router = useRouter();
+const route = useRoute();
 const { showToast } = useToast();
+
+const navLinks = [
+  { path: '/finance', label: 'Financeiro', module: 'finance' },
+  { path: '/contracts', label: 'Contratos', module: 'contracts' },
+  { path: '/stock', label: 'Estoque', module: 'stock' },
+  { path: '/expenses', label: 'Gastos', module: 'expenses' },
+  { path: '/management', label: 'Gerenciamento', module: 'management' },
+];
 
 const deny = (module) => {
   showToast(`Acesso negado ao setor: ${module}`, "error");
 };
+
 const companyId = localStorage.getItem('companyId');
 const companyName = ref(COMPANIES[Number(companyId)] || 'Indefinido');
 const nomenclature = ref(localStorage.getItem('nomenclature') || 'Indefinido');
@@ -117,5 +99,4 @@ const logout = () => {
   router.push('/login');
 };
 </script>
-
 <style src="@/components/navbar.css" scoped></style>
