@@ -19,11 +19,11 @@
               <span class="detail-label col-date">Última Venda</span>
             </div>
 
-            <div class="client-list-item" v-for="c in activeGroupClients" :key="c.id">
+            <div class="client-list-item" v-for="c in activeGroupClients" :key="c.safeKey">
               <span class="list-name">{{ c.name }}</span>
               <span class="list-group">{{ activeGroupInfo?.responsible }}</span>
               <span class="list-date">
-                <template v-if="c.lastSale">{{ formatDate(c.lastSale) }}</template>
+                <template v-if="c.formattedLastSale">{{ c.formattedLastSale }}</template>
                 <template v-else><span class="empty-data">Sem vendas</span></template>
               </span>
             </div>
@@ -39,10 +39,10 @@
           </div>
           <div class="timeline">
             <template v-if="interactions.length > 0">
-              <div class="timeline-item" v-for="atd in interactions" :key="atd.id">
+              <div class="timeline-item" v-for="atd in interactions" :key="atd.safeKey">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                  <span class="timeline-date">{{ formatDate(atd.date) }} - {{ atd.userName }}</span>
+                  <span class="timeline-date">{{ atd.formattedDate }} - {{ atd.userName }}</span>
                   <p class="timeline-obs">{{ atd.content }}</p>
                   <span class="timeline-client">Ref: {{ atd.clientName }}</span>
                 </div>
@@ -64,7 +64,7 @@
               <i class="fa-solid fa-file-signature" style="margin-right: 1rem;"></i> Contratos em Aberto
             </h4>
             <div class="accordion-right">
-              <span class="list-total">{{ formatCurrency(totalContracts) }}</span>
+              <span class="list-total">{{ totalContractsFormatted }}</span>
               <i class="fa-solid fa-chevron-down toggle-icon"></i>
             </div>
           </div>
@@ -84,15 +84,15 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="contrato in contracts" :key="contrato.id || Math.random()">
+                      <tr v-for="contrato in contracts" :key="contrato.safeKey">
                         <td class="text-center">{{ contrato.contractType }}</td>
                         <td class="text-left">{{ contrato.clientName }}</td>
-                        <td class="text-center">{{ formatDate(contrato.generationDate) }}</td>
-                        <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(contrato.dueDate) }">
-                          {{ formatDate(contrato.dueDate) }}
+                        <td class="text-center">{{ contrato.formattedGeneration }}</td>
+                        <td class="text-center" :class="{ 'text-red fw-bold': contrato.isLate }">
+                          {{ contrato.formattedDueDate }}
                         </td>
-                        <td class="text-center">{{ formatCurrency(contrato.originalValue) }}</td>
-                        <td class="fw-bold text-center">{{ formatCurrency(contrato.balanceDue) }}</td>
+                        <td class="text-center">{{ contrato.formattedOriginal }}</td>
+                        <td class="fw-bold text-center">{{ contrato.formattedBalance }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -112,7 +112,7 @@
               <i class="fa-solid fa-money-check-dollar" style="margin-right: 1rem;"></i> Cheques em Aberto
             </h4>
             <div class="accordion-right">
-              <span class="list-total">{{ formatCurrency(totalChecks) }}</span>
+              <span class="list-total">{{ totalChecksFormatted }}</span>
               <i class="fa-solid fa-chevron-down toggle-icon"></i>
             </div>
           </div>
@@ -134,17 +134,17 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="cheque in checks" :key="cheque.document">
+                      <tr v-for="cheque in checks" :key="cheque.safeKey">
                         <td class="text-center">{{ cheque.companyId }}</td>
                         <td class="text-left">{{ cheque.clientName }}</td>
                         <td class="text-center">{{ cheque.document }}</td>
                         <td>{{ cheque.accountHolder }}</td>
-                        <td class="text-center">{{ formatDate(cheque.receiptDate) }}</td>
-                        <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(cheque.goodForDate) }">
-                          {{ formatDate(cheque.goodForDate) }}
+                        <td class="text-center">{{ cheque.formattedReceipt }}</td>
+                        <td class="text-center" :class="{ 'text-red fw-bold': cheque.isLate }">
+                          {{ cheque.formattedGoodFor }}
                         </td>
-                        <td class="text-center">{{ formatCurrency(cheque.originalValue) }}</td>
-                        <td class="fw-bold text-center">{{ formatCurrency(cheque.balanceDue) }}</td>
+                        <td class="text-center">{{ cheque.formattedOriginal }}</td>
+                        <td class="fw-bold text-center">{{ cheque.formattedBalance }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -164,7 +164,7 @@
               <i class="fa-solid fa-file-invoice-dollar" style="margin-right: 1rem;"></i> Notas em Aberto
             </h4>
             <div class="accordion-right">
-              <span class="list-total">{{ formatCurrency(totalBills) }}</span>
+              <span class="list-total">{{ totalBillsFormatted }}</span>
               <i class="fa-solid fa-chevron-down toggle-icon"></i>
             </div>
           </div>
@@ -186,18 +186,18 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="nota in bills" :key="nota.nf + '-' + nota.installment">
+                      <tr v-for="nota in bills" :key="nota.safeKey">
                         <td class="text-center">{{ nota.companyId }}</td>
                         <td class="text-left">{{ nota.clientName }}</td>
                         <td class="text-center">{{ nota.nf }}</td>
                         <td class="text-center">{{ nota.installment }}</td>
-                        <td class="text-center">{{ formatDate(nota.saleDate) }}</td>
-                        <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(nota.dueDate) }">
-                          {{ formatDate(nota.dueDate) }}
+                        <td class="text-center">{{ nota.formattedSaleDate }}</td>
+                        <td class="text-center" :class="{ 'text-red fw-bold': nota.isLate }">
+                          {{ nota.formattedDueDate }}
                         </td>
-                        <td class="text-center">{{ formatCurrency(nota.originalValue) }}</td>
-                        <td class="fw-bold text-center" :class="Number(nota.balanceDue) < 0 ? 'emerald' : ''">
-                          {{ formatCurrency(nota.balanceDue) }}
+                        <td class="text-center">{{ nota.formattedOriginal }}</td>
+                        <td class="fw-bold text-center" :class="{ 'emerald': nota.isCredit }">
+                          {{ nota.formattedBalance }}
                         </td>
                       </tr>
                     </tbody>
@@ -221,7 +221,7 @@
           <div class="gt-info">
             <p class="gt-label">Total a Receber do Grupo</p>
           </div>
-          <h2 class="gt-value">{{ formatCurrency(grandTotalReceivable) }}</h2>
+          <h2 class="gt-value">{{ grandTotalReceivableFormatted }}</h2>
         </div>
       </div>
 
@@ -252,21 +252,55 @@ const { showToast } = useToast();
 
 const isFetchingClient = ref(true);
 const activeGroupInfo = ref(null);
+
+// Arrays que receberão os dados pré-processados
 const activeGroupClients = ref([]);
 const interactions = ref([]);
 const contracts = ref([]);
 const checks = ref([]);
 const bills = ref([]);
 
-const totalContracts = ref(0);
-const totalChecks = ref(0);
-const totalBills = ref(0);
-const grandTotalReceivable = ref(0);
+// Strings formatadas para os totais
+const totalContractsFormatted = ref('R$ 0,00');
+const totalChecksFormatted = ref('R$ 0,00');
+const totalBillsFormatted = ref('R$ 0,00');
+const grandTotalReceivableFormatted = ref('R$ 0,00');
 
 const showLimitsModal = ref(false);
 const showNewCollectionModal = ref(false);
 const activeAccordion = ref('');
 
+// =================================================================
+// PREVENÇÃO DE LENTIDÃO: FUNÇÕES FORA DO LOOP
+// O Intl.NumberFormat pesa DEMAIS se criado a cada linha da tabela.
+// Criamos UMA vez só e usamos a referência dele.
+// =================================================================
+const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+const formatCurrency = (value) => {
+  const num = Number(value);
+  if (isNaN(num)) return 'R$ 0,00';
+  return currencyFormatter.format(num);
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const [year, month, day] = dateString.split('-');
+  return `${day}/${month}/${year}`;
+};
+
+const isOverdue = (dateString) => {
+  if (!dateString) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dueDate = new Date(dateString);
+  dueDate.setHours(0, 0, 0, 0);
+  return dueDate < today;
+};
+
+// =================================================================
+// BUSCA E PRÉ-PROCESSAMENTO (ONDE A MÁGICA DA PERFORMANCE ACONTECE)
+// =================================================================
 const fetchDashboardData = async () => {
   if (!props.client?.id) return;
 
@@ -275,16 +309,60 @@ const fetchDashboardData = async () => {
     const groupData = await financeService.getClientData(props.client.id);
 
     activeGroupInfo.value = groupData.groupInfo;
-    activeGroupClients.value = groupData.clients;
-    interactions.value = groupData.interactions;
-    contracts.value = groupData.contracts;
-    checks.value = groupData.checks;
-    bills.value = groupData.bills;
 
-    totalContracts.value = groupData.totalContracts;
-    totalChecks.value = groupData.totalChecks;
-    totalBills.value = groupData.totalBills;
-    grandTotalReceivable.value = groupData.totalReceivable;
+    // PROCESSA CLIENTES
+    activeGroupClients.value = groupData.clients.map(c => ({
+      ...c,
+      safeKey: `client-${c.id}`,
+      formattedLastSale: c.lastSale ? formatDate(c.lastSale) : null
+    }));
+
+    // PROCESSA ATENDIMENTOS
+    interactions.value = groupData.interactions.map(atd => ({
+      ...atd,
+      safeKey: `atd-${atd.id}`,
+      formattedDate: formatDate(atd.date)
+    }));
+
+    // PROCESSA CONTRATOS
+    contracts.value = groupData.contracts.map((c, index) => ({
+      ...c,
+      safeKey: c.id ? `contract-${c.id}` : `contract-idx-${index}`,
+      formattedGeneration: formatDate(c.generationDate),
+      formattedDueDate: formatDate(c.dueDate),
+      formattedOriginal: formatCurrency(c.originalValue),
+      formattedBalance: formatCurrency(c.balanceDue),
+      isLate: isOverdue(c.dueDate)
+    }));
+
+    // PROCESSA CHEQUES
+    checks.value = groupData.checks.map((c, index) => ({
+      ...c,
+      safeKey: c.document ? `check-${c.document}` : `check-idx-${index}`,
+      formattedReceipt: formatDate(c.receiptDate),
+      formattedGoodFor: formatDate(c.goodForDate),
+      formattedOriginal: formatCurrency(c.originalValue),
+      formattedBalance: formatCurrency(c.balanceDue),
+      isLate: isOverdue(c.goodForDate)
+    }));
+
+    // PROCESSA NOTAS FISCAIS
+    bills.value = groupData.bills.map((b, index) => ({
+      ...b,
+      safeKey: b.nf ? `bill-${b.nf}-${b.installment}` : `bill-idx-${index}`,
+      formattedSaleDate: formatDate(b.saleDate),
+      formattedDueDate: formatDate(b.dueDate),
+      formattedOriginal: formatCurrency(b.originalValue),
+      formattedBalance: formatCurrency(b.balanceDue),
+      isLate: isOverdue(b.dueDate),
+      isCredit: Number(b.balanceDue) < 0
+    }));
+
+    // PROCESSA TOTAIS
+    totalContractsFormatted.value = formatCurrency(groupData.totalContracts);
+    totalChecksFormatted.value = formatCurrency(groupData.totalChecks);
+    totalBillsFormatted.value = formatCurrency(groupData.totalBills);
+    grandTotalReceivableFormatted.value = formatCurrency(groupData.totalReceivable);
 
   } catch (error) {
     showToast("Erro ao carregar dados do grupo. Verifique sua conexão.", "error");
@@ -302,27 +380,11 @@ const toggleAccordion = (section) => {
 };
 
 const addInteractionToTimeline = (newInteraction) => {
-  interactions.value.unshift(newInteraction);
-};
-
-// formatadores
-const isOverdue = (dateString) => {
-  if (!dateString) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const dueDate = new Date(dateString);
-  dueDate.setHours(0, 0, 0, 0);
-  return dueDate < today;
-};
-const formatCurrency = (value) => {
-  const num = Number(value);
-  if (isNaN(num)) return 'R$ 0,00';
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num);
-};
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-  const [year, month, day] = dateString.split('-');
-  return `${day}/${month}/${year}`;
+  interactions.value.unshift({
+    ...newInteraction,
+    safeKey: `atd-${newInteraction.id || Date.now()}`,
+    formattedDate: formatDate(newInteraction.date)
+  });
 };
 </script>
 

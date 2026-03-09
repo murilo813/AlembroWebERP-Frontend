@@ -31,15 +31,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="c in clients" :key="c.id">
+              <tr v-for="c in formattedClients" :key="c.id">
                 <td class="col-name text-left fw-bold">{{ c.name }}</td>
-                <td class="text-right">{{ formatCurrency(c.limitBm) }}</td>
-                <td class="text-right" :class="{ 'text-red': c.balanceBm < 0 }">{{ formatCurrency(c.balanceBm) }}</td>
-                <td class="text-right">{{ formatCurrency(c.limitCalc) }}</td>
-                <td class="text-right" :class="{ 'text-red': c.balanceCalc < 0 }">{{ formatCurrency(c.balanceCalc) }}
-                </td>
+                <td class="text-right">{{ c.formattedLimitBm }}</td>
+                <td class="text-right" :class="{ 'text-red': c.isBalanceBmNegative }">{{ c.formattedBalanceBm }}</td>
+                <td class="text-right">{{ c.formattedLimitCalc }}</td>
+                <td class="text-right" :class="{ 'text-red': c.isBalanceCalcNegative }">{{ c.formattedBalanceCalc }}</td>
                 <td class="text-center">{{ c.maxDelay }}d</td>
-                <td class="text-center">{{ formatPercent(c.pctDelay90) }}</td>
+                <td class="text-center">{{ c.formattedPctDelay90 }}</td>
                 <td class="text-center">{{ c.avgDelay }}d</td>
               </tr>
             </tbody>
@@ -49,37 +48,37 @@
         <footer class="modal-footer">
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Total Lim. BM</span>
-            <span class="modal-total-value">{{ formatCurrency(groupInfo?.totalLimitBm) }}</span>
+            <span class="modal-total-value">{{ formattedGroup.formattedTotalLimitBm }}</span>
           </div>
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Total Sld. BM</span>
             <span class="modal-total-value"
-              :class="{ 'emerald': groupInfo?.totalBalanceBm > 0, 'text-red': groupInfo?.totalBalanceBm < 0 }">
-              {{ formatCurrency(groupInfo?.totalBalanceBm) }}
+              :class="{ 'emerald': formattedGroup.isTotalBalanceBmPositive, 'text-red': formattedGroup.isTotalBalanceBmNegative }">
+              {{ formattedGroup.formattedTotalBalanceBm }}
             </span>
           </div>
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Total Lim. Calc.</span>
-            <span class="modal-total-value">{{ formatCurrency(groupInfo?.totalLimitCalc) }}</span>
+            <span class="modal-total-value">{{ formattedGroup.formattedTotalLimitCalc }}</span>
           </div>
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Total Sld. Calc.</span>
             <span class="modal-total-value"
-              :class="{ 'emerald': groupInfo?.totalBalanceCalc > 0, 'text-red': groupInfo?.totalBalanceCalc < 0 }">
-              {{ formatCurrency(groupInfo?.totalBalanceCalc) }}
+              :class="{ 'emerald': formattedGroup.isTotalBalanceCalcPositive, 'text-red': formattedGroup.isTotalBalanceCalcNegative }">
+              {{ formattedGroup.formattedTotalBalanceCalc }}
             </span>
           </div>
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Maior Atraso<br><small>(Grupo)</small></span>
-            <span class="modal-total-value">{{ groupInfo?.groupMaxDelay }}d</span>
+            <span class="modal-total-value">{{ formattedGroup.groupMaxDelay }}d</span>
           </div>
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Média 90 Dias<br><small>(Grupo)</small></span>
-            <span class="modal-total-value">{{ formatPercent(groupInfo?.groupAvgPct90) }}</span>
+            <span class="modal-total-value">{{ formattedGroup.formattedGroupAvgPct90 }}</span>
           </div>
           <div class="modal-total-item text-center">
             <span class="modal-total-label">Média Geral<br><small>(Grupo)</small></span>
-            <span class="modal-total-value">{{ groupInfo?.groupAvgDelay }}d</span>
+            <span class="modal-total-value">{{ formattedGroup.groupAvgDelay }}d</span>
           </div>
         </footer>
       </div>
@@ -88,7 +87,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
   show: Boolean,
   groupInfo: Object,
   clients: Array
@@ -96,15 +97,54 @@ defineProps({
 
 defineEmits(['close']);
 
+// 1. Instanciamos o formatador pesado UMA VEZ FORA de tudo
+const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
 const formatCurrency = (value) => {
   const num = Number(value);
   if (isNaN(num)) return 'R$ 0,00';
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num);
+  return currencyFormatter.format(num);
 };
+
 const formatPercent = (value) => {
   if (value === null || value === undefined) return '0%';
   return `${(parseFloat(value) * 100).toFixed(1)}%`;
 };
+
+// 2. Computed para mapear os Clientes (só roda quando as props.clients mudam)
+const formattedClients = computed(() => {
+  if (!props.clients) return [];
+  
+  return props.clients.map(c => ({
+    ...c,
+    formattedLimitBm: formatCurrency(c.limitBm),
+    formattedBalanceBm: formatCurrency(c.balanceBm),
+    formattedLimitCalc: formatCurrency(c.limitCalc),
+    formattedBalanceCalc: formatCurrency(c.balanceCalc),
+    formattedPctDelay90: formatPercent(c.pctDelay90),
+    isBalanceBmNegative: Number(c.balanceBm) < 0,
+    isBalanceCalcNegative: Number(c.balanceCalc) < 0
+  }));
+});
+
+// 3. Computed para mapear o Footer (só roda quando as props.groupInfo mudam)
+const formattedGroup = computed(() => {
+  if (!props.groupInfo) return {};
+  
+  const info = props.groupInfo;
+  return {
+    ...info,
+    formattedTotalLimitBm: formatCurrency(info.totalLimitBm),
+    formattedTotalBalanceBm: formatCurrency(info.totalBalanceBm),
+    formattedTotalLimitCalc: formatCurrency(info.totalLimitCalc),
+    formattedTotalBalanceCalc: formatCurrency(info.totalBalanceCalc),
+    formattedGroupAvgPct90: formatPercent(info.groupAvgPct90),
+    isTotalBalanceBmPositive: Number(info.totalBalanceBm) > 0,
+    isTotalBalanceBmNegative: Number(info.totalBalanceBm) < 0,
+    isTotalBalanceCalcPositive: Number(info.totalBalanceCalc) > 0,
+    isTotalBalanceCalcNegative: Number(info.totalBalanceCalc) < 0,
+  };
+});
 </script>
 
 <style src="@/views/Finance/finance.css" scoped></style>
