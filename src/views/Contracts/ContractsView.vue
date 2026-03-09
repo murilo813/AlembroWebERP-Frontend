@@ -26,7 +26,7 @@
                   <i class="fa-solid fa-file-signature" style="margin-right: 1rem;"></i> Contratos em Aberto
                 </h4>
                 <div class="accordion-right">
-                  <span class="list-total fw-bold emerald">{{ formatCurrency(totalOpen) }}</span>
+                  <span class="list-total fw-bold emerald">{{ totalOpenFormatted }}</span>
                   <i class="fa-solid fa-chevron-down toggle-icon"></i>
                 </div>
               </div>
@@ -47,7 +47,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="contract in openContracts" :key="contract.id">
+                        <tr v-for="contract in openContracts" :key="contract.safeKey">
                           <td class="text-center" style="position: relative;">
                             <i v-if="contract.obs" class="fa-solid fa-circle-exclamation obs-indicator emerald"
                               title="Ver Observação" @click="showObs(contract.obs)">
@@ -58,12 +58,12 @@
                           <td class="text-center">
                             <span class="type-badge">{{ contract.contractType }}</span>
                           </td>
-                          <td class="text-center">{{ formatDate(contract.generationDate) }}</td>
-                          <td class="text-center" :class="{ 'text-red fw-bold': isOverdue(contract.dueDate) }">
-                            {{ formatDate(contract.dueDate) }}
+                          <td class="text-center">{{ contract.formattedGeneration }}</td>
+                          <td class="text-center" :class="{ 'text-red fw-bold': contract.isLate }">
+                            {{ contract.formattedDueDate }}
                           </td>
-                          <td class="text-center">{{ formatCurrency(contract.originalValue) }}</td>
-                          <td class="text-center fw-bold">{{ formatCurrency(contract.balanceDue) }}</td>
+                          <td class="text-center">{{ contract.formattedOriginal }}</td>
+                          <td class="text-center fw-bold">{{ contract.formattedBalance }}</td>
                           <td class="text-center">
                             <button class="action-btn edit-btn" title="Editar Contrato" @click="openModal(contract)">
                               <i class="fa-solid fa-pen"></i>
@@ -87,7 +87,7 @@
                   <i class="fa-solid fa-check-double" style="margin-right: 1rem;"></i> Contratos Pagos / Finalizados
                 </h4>
                 <div class="accordion-right">
-                  <span class="list-total fw-bold emerald">{{ formatCurrency(totalPaid) }}</span>
+                  <span class="list-total fw-bold emerald">{{ totalPaidFormatted }}</span>
                   <i class="fa-solid fa-chevron-down toggle-icon"></i>
                 </div>
               </div>
@@ -107,7 +107,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="contract in paidContracts" :key="contract.id">
+                        <tr v-for="contract in paidContracts" :key="contract.safeKey">
                           <td class="text-center" style="position: relative;">
                             <i v-if="contract.obs" class="fa-solid fa-circle-exclamation obs-indicator emerald"
                               title="Ver Observação" @click="showObs(contract.obs)">
@@ -118,9 +118,9 @@
                           <td class="text-center">
                             <span class="type-badge">{{ contract.contractType }}</span>
                           </td>
-                          <td class="text-center">{{ formatDate(contract.generationDate) }}</td>
-                          <td class="text-center">{{ formatDate(contract.dueDate) }}</td>
-                          <td class="text-center">{{ formatCurrency(contract.originalValue) }}</td>
+                          <td class="text-center">{{ contract.formattedGeneration }}</td>
+                          <td class="text-center">{{ contract.formattedDueDate }}</td>
+                          <td class="text-center">{{ contract.formattedOriginal }}</td>
                           <td class="text-center fw-bold emerald">Liquidado</td>
                         </tr>
                         <tr v-if="paidContracts.length === 0">
@@ -140,6 +140,7 @@
 
     </div>
   </div>
+
   <ContractModal :show="showModal" :contractData="selectedContract" @close="closeModal"
     @saved="() => fetchContracts(true)" />
 
@@ -181,13 +182,38 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 const { showToast } = useToast();
 
 const contractsList = ref([]);
-const totalOpen = ref(0);
-const totalPaid = ref(0);
+const totalOpenFormatted = ref('R$ 0,00');
+const totalPaidFormatted = ref('R$ 0,00');
+
 const isLoading = ref(true);
 const showModal = ref(false);
 const selectedContract = ref(null);
 const showObsModal = ref(false);
-const currentObsText = ref('')
+const currentObsText = ref('');
+const activeAccordion = ref('open');
+
+const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+const formatCurrency = (value) => {
+  const num = Number(value);
+  if (isNaN(num)) return 'R$ 0,00';
+  return currencyFormatter.format(num);
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const [year, month, day] = dateString.split('-');
+  return `${day}/${month}/${year}`;
+};
+
+const isOverdue = (dateString) => {
+  if (!dateString) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dueDate = new Date(dateString);
+  dueDate.setHours(0, 0, 0, 0);
+  return dueDate < today;
+};
 
 const openModal = (contract) => {
   selectedContract.value = contract;
@@ -209,10 +235,12 @@ const closeObsModal = () => {
   currentObsText.value = '';
 };
 
+const toggleAccordion = (section) => {
+  activeAccordion.value = activeAccordion.value === section ? null : section;
+};
+
 const fetchContracts = async (isSilent = false) => {
-  if (!isSilent) {
-    isLoading.value = true;
-  }
+  if (!isSilent) isLoading.value = true;
 
   try {
     const userId = localStorage.getItem('userId');
@@ -224,28 +252,27 @@ const fetchContracts = async (isSilent = false) => {
 
     const data = await contractsService.getContracts(userId);
 
-    contractsList.value = data.contracts;
-    totalOpen.value = data.totalOpen;
-    totalPaid.value = data.totalPaid;
+    contractsList.value = data.contracts.map((c, index) => ({
+      ...c,
+      safeKey: c.id ? `contract-${c.id}` : `contract-idx-${index}`,
+      formattedGeneration: formatDate(c.generationDate),
+      formattedDueDate: formatDate(c.dueDate),
+      formattedOriginal: formatCurrency(c.originalValue),
+      formattedBalance: formatCurrency(c.balanceDue),
+      isLate: isOverdue(c.dueDate)
+    }));
+
+    totalOpenFormatted.value = formatCurrency(data.totalOpen);
+    totalPaidFormatted.value = formatCurrency(data.totalPaid);
 
   } catch (error) {
     showToast("Erro ao carregar contratos.", "error");
   } finally {
-    if (!isSilent) {
-      isLoading.value = false;
-    }
+    if (!isSilent) isLoading.value = false;
   }
 };
 
-onMounted(() => {
-  fetchContracts();
-});
-
-const activeAccordion = ref('open');
-
-const toggleAccordion = (section) => {
-  activeAccordion.value = activeAccordion.value === section ? null : section;
-};
+onMounted(() => fetchContracts());
 
 const openContracts = computed(() =>
   contractsList.value.filter(c => c.status === 'aberto')
@@ -255,26 +282,6 @@ const paidContracts = computed(() =>
   contractsList.value.filter(c => c.status === 'pago')
 );
 
-const isOverdue = (dateString) => {
-  if (!dateString) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const dueDate = new Date(dateString);
-  dueDate.setHours(0, 0, 0, 0);
-  return dueDate < today;
-};
-
-const formatCurrency = (value) => {
-  const num = Number(value);
-  if (isNaN(num)) return 'R$ 0,00';
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num);
-};
-
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-  const [year, month, day] = dateString.split('-');
-  return `${day}/${month}/${year}`;
-};
 </script>
 
 <style src="@/views/Contracts/contracts.css" scoped></style>
