@@ -26,12 +26,12 @@
           <Transition name="expand-filters">
             <div v-show="isFiltersOpen" class="filters-body">
               <div class="filters-grid">
-                
+
                 <div class="form-group">
                   <label>Data Início</label>
                   <input type="date" class="form-control compact-input" v-model="filters.startDate">
                 </div>
-                
+
                 <div class="form-group">
                   <label>Data Final</label>
                   <input type="date" class="form-control compact-input" v-model="filters.endDate">
@@ -44,8 +44,7 @@
                       @input="handleVehicleSearch" @focus="showVehicleDropdown = true"
                       @blur="hideVehicleDropdownWithDelay" placeholder="Buscar placa...">
                     <ul v-if="showVehicleDropdown && searchResultsVehicles.length > 0" class="dropdown-list">
-                      <li v-for="vehicle in searchResultsVehicles" :key="vehicle.plate"
-                        @click="selectVehicle(vehicle)">
+                      <li v-for="vehicle in searchResultsVehicles" :key="vehicle.plate" @click="selectVehicle(vehicle)">
                         <span class="fw-bold">{{ vehicle.plate }}</span> - {{ vehicle.vehicle }}
                       </li>
                     </ul>
@@ -83,21 +82,32 @@
                   <input type="text" class="form-control compact-input" placeholder="ID/Nota..." v-model="filters.doc">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group search-group">
                   <label>Fornecedor</label>
-                  <div style="position: relative;">
-                    <input type="text" class="form-control compact-input" placeholder="Nome..." v-model="filters.provider">
-                    <i class="fa-solid fa-magnifying-glass search-icon-inside"></i>
+                  <div class="search-wrapper" v-if="!filters.providerId">
+                    <input type="text" class="form-control compact-input" v-model="searchProviderQuery"
+                      @input="handleProviderSearch" @focus="showProviderDropdown = true"
+                      @blur="hideProviderDropdownWithDelay" placeholder="Digite nome ou ID..." />
+                    <i class="fa-solid fa-magnifying-glass search-icon-inside" v-if="!searchProviderQuery"></i>
+
+                    <ul v-if="showProviderDropdown && searchResultsProviders.length > 0" class="dropdown-list">
+                      <li v-for="prov in searchResultsProviders" :key="prov.id" @click="selectProvider(prov)">
+                        <span class="fw-bold">{{ prov.id }}</span> - {{ prov.name }}
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-else class="selected-client-badge compact-badge emerald fw-bold">
+                    <span><i class="fa-solid fa-building"></i> {{ filters.providerName }}</span>
+                    <button class="btn-clear text-red" title="Limpar" @click="clearProvider">
+                      <i class="fa-solid fa-times"></i>
+                    </button>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label>Tipo de Gasto</label>
-                  <CustomSelect 
-                    v-model="filters.expenseType" 
-                    :options="expenseTypeOptions" 
-                    placeholder="Todos os tipos" 
-                  />
+                  <CustomSelect v-model="filters.expenseType" :options="expenseTypeOptions"
+                    placeholder="Todos os tipos" />
                 </div>
 
                 <div class="filter-actions-cell">
@@ -116,40 +126,43 @@
       </header>
 
       <main class="expenses-content" style="display: flex; flex-direction: column; gap: 3rem;">
-        
+
         <div class="summary-cards-grid">
           <div class="summary-card">
             <div class="summary-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
             <div class="summary-info">
               <span class="summary-label">Total Filtrado</span>
               <span class="summary-value emerald">{{ formatCurrency(summaryMocks.totalAmount) }}</span>
-              <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{ summaryMocks.totalCount }} Lançamentos</span>
+              <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{
+                summaryMocks.totalCount }} Lançamentos</span>
             </div>
           </div>
-          
+
           <div class="summary-card">
             <div class="summary-icon"><i class="fa-solid fa-car"></i></div>
             <div class="summary-info">
               <span class="summary-label">Veículo com Maior Gasto</span>
               <span class="summary-value" style="font-size: 1.8rem;">{{ summaryMocks.topVehicle.plate }}</span>
-              <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{ formatCurrency(summaryMocks.topVehicle.value) }}</span>
+              <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{
+                formatCurrency(summaryMocks.topVehicle.value) }}</span>
             </div>
           </div>
-          
+
           <div class="summary-card">
             <div class="summary-icon"><i class="fa-solid fa-user-tie"></i></div>
             <div class="summary-info">
               <span class="summary-label">Resp. com Maior Gasto</span>
               <span class="summary-value" style="font-size: 1.8rem;">{{ summaryMocks.topResponsible.name }}</span>
-              <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{ formatCurrency(summaryMocks.topResponsible.value) }}</span>
+              <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{
+                formatCurrency(summaryMocks.topResponsible.value) }}</span>
             </div>
           </div>
-          
+
           <div class="summary-card">
             <div class="summary-icon" :class="`icon-${summaryMocks.topCategory.code}`">
               <i class="fa-solid fa-layer-group"></i>
             </div>
-            
+
             <div class="summary-info">
               <span class="summary-label">Categoria com Maior Gasto</span>
               <span class="summary-value" :class="`text-${summaryMocks.topCategory.code}`" style="font-size: 1.8rem;">
@@ -169,7 +182,7 @@
                 <th class="text-center" style="width: 10rem;">ID/Nota</th>
                 <th class="text-center" style="width: 22rem;">Placa & Veículo</th>
                 <th class="text-left" style="width: 18rem;">Responsável</th>
-                <th class="text-left">Fornecedor</th> 
+                <th class="text-left">Fornecedor</th>
                 <th class="text-center" style="width: 15rem;">Tipo / Data</th>
                 <th class="text-right" style="width: 14rem;">Valor / KM</th>
                 <th class="text-center" style="width: 6rem;"></th>
@@ -189,7 +202,7 @@
                     <span class="fw-bold" style="font-size: 1.4rem; color: #f8fafc;">{{ expense.plate }}</span>
                   </div>
                 </td>
-                
+
                 <td class="text-left">
                   <div class="cell-responsible">
                     <span class="fw-bold">{{ expense.responsible }}</span>
@@ -199,7 +212,7 @@
                 <td class="text-left">
                   <span class="fw-bold">{{ expense.provider }}</span>
                 </td>
-                
+
                 <td class="text-center">
                   <div class="cell-type-date" style="align-items: center;">
                     <span class="expense-type-badge" :class="expense.typeCode">
@@ -231,25 +244,22 @@
         </div>
       </main>
     </div>
-    
-    <EntryModal 
-      :show="showDetailsModal" 
-      :expenseData="selectedExpense" 
-      @close="showDetailsModal = false" 
-    />
+
+    <EntryModal :show="showDetailsModal" :expenseData="selectedExpense" @close="showDetailsModal = false" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onUnmounted } from 'vue';
 import { useToast } from '@/utils/toast';
-import expensesService from '@/services/expensesService'; 
+import expensesService from '@/services/expensesService';
+import financeService from '@/services/financeService';
 import CustomSelect from '@/components/common/CustomSelect.vue';
 import EntryModal from '@/views/Expenses/EntryModal.vue';
 
 const { showToast } = useToast();
 
-const isFiltersOpen = ref(false); 
+const isFiltersOpen = ref(false);
 
 const toggleFilters = () => {
   isFiltersOpen.value = !isFiltersOpen.value;
@@ -259,17 +269,17 @@ const expenseTypeOptions = [
   { label: 'Todos os tipos', value: '' },
   { label: 'Combustível', value: 'combustivel' },
   { label: 'Manutenção', value: 'manutencao' },
-  { label: 'Aquisição', value: 'aquisicao'},
-  { label: 'Lavação', value: 'lavacao'},
-  { label: 'Documentação', value: 'documentacao'},
-  { label: 'Multa', value: 'multa'},
+  { label: 'Aquisição', value: 'aquisicao' },
+  { label: 'Lavação', value: 'lavacao' },
+  { label: 'Documentação', value: 'documentacao' },
+  { label: 'Multa', value: 'multa' },
   { label: 'Serviços', value: 'servicos' },
   { label: 'Outros', value: 'outros' }
 ];
 
 const filters = ref({
-  startDate: '', endDate: '', plate: '', doc: '', 
-  provider: '', expenseType: '', responsible: '' 
+  startDate: '', endDate: '', plate: '', doc: '',
+  providerId: null, expenseType: '', responsible: ''
 });
 
 const hasActiveFilters = computed(() => {
@@ -278,11 +288,50 @@ const hasActiveFilters = computed(() => {
 
 let vehicleTimer = null;
 let responsibleTimer = null;
+let providerTimer = null;
 
 onUnmounted(() => {
   if (vehicleTimer) clearTimeout(vehicleTimer);
   if (responsibleTimer) clearTimeout(responsibleTimer);
+  if (providerTimer) clearTimeout(providerTimer); 
 });
+
+const searchProviderQuery = ref('');
+const showProviderDropdown = ref(false);
+const searchResultsProviders = ref([]);
+
+const handleProviderSearch = () => {
+  clearTimeout(providerTimer);
+  if (searchProviderQuery.value.length < 3) {
+    searchResultsProviders.value = [];
+    return;
+  }
+  
+  providerTimer = setTimeout(async () => {
+    try {
+      // Reutilizando a busca de clientes para buscar fornecedores
+      searchResultsProviders.value = await financeService.searchClients(searchProviderQuery.value);
+    } catch (error) {
+      console.error("Erro na busca de fornecedores", error);
+    }
+  }, 400);
+};
+
+const selectProvider = (provider) => {
+  filters.value.providerId = provider.id;
+  filters.value.providerName = provider.name;
+  searchProviderQuery.value = '';
+  showProviderDropdown.value = false;
+};
+
+const clearProvider = () => {
+  filters.value.providerId = null;
+  filters.value.providerName = '';
+  searchProviderQuery.value = '';
+};
+
+const hideProviderDropdownWithDelay = () => setTimeout(() => showProviderDropdown.value = false, 200);
+
 
 const searchVehicleQuery = ref('');
 const showVehicleDropdown = ref(false);
@@ -350,13 +399,17 @@ const hideResponsibleDropdownWithDelay = () => setTimeout(() => showResponsibleD
 
 const applyFilters = () => {
   showToast("Buscando dados...", "success");
-  isFiltersOpen.value = false; 
+  isFiltersOpen.value = false;
 };
 
 const clearFilters = () => {
-  filters.value = { startDate: '', endDate: '', plate: '', doc: '', provider: '', expenseType: '', responsible: '' };
+  filters.value = { 
+    startDate: '', endDate: '', plate: '', doc: '', 
+    providerId: null, providerName: '', expenseType: '', responsible: '' 
+  };
   searchVehicleQuery.value = '';
   searchResponsibleQuery.value = '';
+  searchProviderQuery.value = ''; 
 };
 
 const showDetailsModal = ref(false);
@@ -372,7 +425,7 @@ const openDetails = (expense) => {
     items: [
       { id: '001', name: 'Óleo Diesel S10', unit: 'LT', quantity: 400, unitCost: 6.12, addition: 0, discount: 48.00, totalValue: 2400.00 }
     ]
-  }; 
+  };
   showDetailsModal.value = true;
 };
 
