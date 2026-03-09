@@ -1022,13 +1022,30 @@
   font-weight: 800;
 }
 
-.total-highlight {
-  grid-column: span 6;
-  background: rgba(16, 185, 129, 0.08);
-  border: 0.1rem solid rgba(16, 185, 129, 0.3);
+.modal-footer-compact {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-between; /* Empurra o total pra esquerda e o botão pra direita */
   align-items: center;
-  padding: 2rem 3rem;
+  padding: 1.5rem 3rem; /* Reduz a altura (padding) */
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 0.1rem solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-footer-total {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-footer-total .label {
+  color: #94a3b8;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.modal-footer-total .value {
+  color: #10b981; /* Verde clássico (emerald) */
+  font-size: 2.4rem;
+  font-weight: 800;
 }
