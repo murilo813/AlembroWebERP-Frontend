@@ -45,7 +45,6 @@ import statsService from '@/services/statsService';
 import { useToast } from '@/utils/toast';
 
 const stats = ref({ today: 0, week: 0, month: 0 });
-const userId = localStorage.getItem('userId');
 const { showToast } = useToast();
 
 const formatCurrency = (value) => {
@@ -69,7 +68,7 @@ const getFontSize = (value) => {
 
 const fetchStats = async () => {
   try {
-    stats.value = await statsService.getExpensesStats(userId);
+    stats.value = await statsService.getExpensesStats();
   } catch (e) {
     showToast("Erro ao carregar estatísticas contábeis", "error");
     console.error(e);
@@ -77,10 +76,8 @@ const fetchStats = async () => {
 };
 
 onMounted(() => {
-  if (userId) fetchStats();
+  fetchStats();
 });
 </script>
 
-<style scoped>
-@import "@/components/dashboard/expenses.css";
-</style>
+<style src="@/components/dashboard/expenses.css" scoped></style>

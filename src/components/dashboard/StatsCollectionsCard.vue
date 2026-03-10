@@ -37,12 +37,11 @@ import statsService from '@/services/statsService';
 import { useToast } from '@/utils/toast';
 
 const stats = ref({ today: 0, week: 0, month: 0 });
-const userId = localStorage.getItem('userId');
 const { showToast } = useToast();
 
 const fetchStats = async () => {
   try {
-    stats.value = await statsService.getCollectionsStats(userId);
+    stats.value = await statsService.getCollectionsStats();
   } catch (e) {
     showToast("Erro ao carregar estatísticas de atendimentos", "error");
     console.error(e);
@@ -50,7 +49,7 @@ const fetchStats = async () => {
 };
 
 onMounted(() => {
-  if (userId) fetchStats();
+  fetchStats();
 });
 </script>
 
