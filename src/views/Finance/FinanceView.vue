@@ -80,13 +80,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import financeService from '@/services/financeService';
 import { useToast } from '@/utils/toast';
 import ClientDashboard from '@/views/Finance/ClientDashboard.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showToast } = useToast();
+const route = useRoute();    
+const router = useRouter();
 
 const searchQuery = ref('');
 const lastSearchedTerm = ref('');
@@ -119,12 +122,33 @@ const handleSearch = async () => {
   }
 };
 
+const handleExternalClientRequest = async (clientId) => {
+  if (!clientId) return;
+  
+  searchQuery.value = String(clientId);
+  
+  await handleSearch();
+};
+
+onMounted(() => {
+  if (route.query.client) {
+    handleExternalClientRequest(route.query.client);
+  }
+});
+
+watch(() => route.query.client, (newClientId) => {
+  if (newClientId) {
+    handleExternalClientRequest(newClientId);
+  }
+});
+
 const openClient = (client) => {
   activeClient.value = client;
 };
 
 const clearSearch = () => {
   activeClient.value = null;
+  router.replace({ path: '/finance', query: {} }); 
 };
 
 const clearInput = () => {
