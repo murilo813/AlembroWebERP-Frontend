@@ -1,9 +1,9 @@
 import api from '@/api/api';
 
 const notificationService = {
-  async getNotifications(userId) {
+  async getNotifications() { 
     try {
-      const response = await api.get('/notifications', { params: { userId } });
+      const response = await api.get('/notifications'); 
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar notificações:", error);

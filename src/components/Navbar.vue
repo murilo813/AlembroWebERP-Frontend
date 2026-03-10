@@ -139,10 +139,7 @@ const notifications = ref([]);
 let pollingInterval = null;
 
 const fetchNotifications = async () => {
-  const userId = localStorage.getItem('userId');
-  if (userId) {
-    notifications.value = await notificationService.getNotifications(userId);
-  }
+  notifications.value = await notificationService.getNotifications();
 };
 
 const markAsRead = async (id) => {
