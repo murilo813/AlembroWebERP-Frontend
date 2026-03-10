@@ -89,7 +89,6 @@
                       @input="handleProviderSearch" @focus="showProviderDropdown = true"
                       @blur="hideProviderDropdownWithDelay" placeholder="Digite nome ou ID..." />
                     <i class="fa-solid fa-magnifying-glass search-icon-inside" v-if="!searchProviderQuery"></i>
-
                     <ul v-if="showProviderDropdown && searchResultsProviders.length > 0" class="dropdown-list">
                       <li v-for="prov in searchResultsProviders" :key="prov.id" @click="selectProvider(prov)">
                         <span class="fw-bold">{{ prov.id }}</span> - {{ prov.name }}
@@ -111,10 +110,13 @@
                 </div>
 
                 <div class="filter-actions-cell">
-                  <button class="btn-primary btn-compact" @click="applyFilters" title="Filtrar">
-                    <i class="fa-solid fa-filter"></i> Filtrar
+                  <button class="btn-primary btn-compact" @click="applyFilters" title="Filtrar" :disabled="isLoading">
+                    <i class="fa-solid fa-filter" v-if="!isLoading"></i>
+                    <i class="fa-solid fa-circle-notch fa-spin" v-else></i>
+                    Filtrar
                   </button>
-                  <button class="btn-secondary text-red btn-compact-icon" @click="clearFilters" title="Limpar Filtros">
+                  <button class="btn-secondary text-red btn-compact-icon" @click="clearFilters" title="Limpar Filtros"
+                    :disabled="isLoading">
                     <i class="fa-solid fa-eraser"></i>
                   </button>
                 </div>
@@ -132,9 +134,9 @@
             <div class="summary-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
             <div class="summary-info">
               <span class="summary-label">Total Filtrado</span>
-              <span class="summary-value emerald">{{ formatCurrency(summaryMocks.totalAmount) }}</span>
+              <span class="summary-value emerald">{{ formatCurrency(summaryData.totalAmount) }}</span>
               <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{
-                summaryMocks.totalCount }} Lançamentos</span>
+                summaryData.totalCount }} Lançamentos</span>
             </div>
           </div>
 
@@ -142,9 +144,9 @@
             <div class="summary-icon"><i class="fa-solid fa-car"></i></div>
             <div class="summary-info">
               <span class="summary-label">Veículo com Maior Gasto</span>
-              <span class="summary-value" style="font-size: 1.8rem;">{{ summaryMocks.topVehicle.plate }}</span>
+              <span class="summary-value" style="font-size: 1.8rem;">{{ summaryData.topVehicle.name }}</span>
               <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{
-                formatCurrency(summaryMocks.topVehicle.value) }}</span>
+                formatCurrency(summaryData.topVehicle.value) }}</span>
             </div>
           </div>
 
@@ -152,24 +154,26 @@
             <div class="summary-icon"><i class="fa-solid fa-user-tie"></i></div>
             <div class="summary-info">
               <span class="summary-label">Resp. com Maior Gasto</span>
-              <span class="summary-value" style="font-size: 1.8rem;">{{ summaryMocks.topResponsible.name }}</span>
+              <span class="summary-value" style="font-size: 1.8rem;">{{ summaryData.topResponsible.name }}</span>
               <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">{{
-                formatCurrency(summaryMocks.topResponsible.value) }}</span>
+                formatCurrency(summaryData.topResponsible.value) }}</span>
             </div>
           </div>
 
           <div class="summary-card">
-            <div class="summary-icon" :class="`icon-${summaryMocks.topCategory.code}`">
+            <div class="summary-icon"
+              :class="summaryData.topCategory.code ? `icon-${summaryData.topCategory.code}` : ''">
               <i class="fa-solid fa-layer-group"></i>
             </div>
-
             <div class="summary-info">
               <span class="summary-label">Categoria com Maior Gasto</span>
-              <span class="summary-value" :class="`text-${summaryMocks.topCategory.code}`" style="font-size: 1.8rem;">
-                {{ summaryMocks.topCategory.name }}
+              <span class="summary-value"
+                :class="summaryData.topCategory.code ? `text-${summaryData.topCategory.code}` : ''"
+                style="font-size: 1.8rem;">
+                {{ summaryData.topCategory.name }}
               </span>
               <span style="color: #64748b; font-size: 1.2rem; font-weight: 600; margin-top: 0.2rem;">
-                {{ formatCurrency(summaryMocks.topCategory.value) }}
+                {{ formatCurrency(summaryData.topCategory.value) }}
               </span>
             </div>
           </div>
@@ -189,7 +193,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="expense in mockedExpensesList" :key="expense.id">
+              <tr v-if="isLoading">
+                <td colspan="7" class="text-center" style="padding: 4rem; color: #64748b;">
+                  <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 2.4rem;"></i>
+                  <p style="margin-top: 1rem; font-size: 1.4rem;">Buscando dados...</p>
+                </td>
+              </tr>
+
+              <tr v-else-if="expensesList.length === 0">
+                <td colspan="7" class="text-center" style="padding: 4rem;">
+                  <span class="empty-data">Nenhum gasto encontrado para os filtros selecionados.</span>
+                </td>
+              </tr>
+
+              <tr v-else v-for="expense in expensesList" :key="expense.id">
                 <td class="text-center">
                   <span class="fw-bold" style="color: #94a3b8;">#{{ expense.entryId }}</span>
                 </td>
@@ -202,26 +219,22 @@
                     <span class="fw-bold" style="font-size: 1.4rem; color: #f8fafc;">{{ expense.plate }}</span>
                   </div>
                 </td>
-
                 <td class="text-left">
                   <div class="cell-responsible">
                     <span class="fw-bold">{{ expense.responsible }}</span>
                   </div>
                 </td>
-
                 <td class="text-left">
                   <span class="fw-bold">{{ expense.provider }}</span>
                 </td>
-
                 <td class="text-center">
                   <div class="cell-type-date" style="align-items: center;">
                     <span class="expense-type-badge" :class="expense.typeCode">
-                      {{ expense.typeLabel }}
+                      {{ getExpenseTypeLabel(expense.typeCode) }}
                     </span>
-                    <span class="small-date">{{ expense.date }}</span>
+                    <span class="small-date">{{ formatDateBR(expense.date) }}</span>
                   </div>
                 </td>
-
                 <td class="text-right">
                   <div class="cell-value" style="align-items: flex-end;">
                     <span class="fw-bold emerald">{{ formatCurrency(expense.value) }}</span>
@@ -234,14 +247,20 @@
                   </button>
                 </td>
               </tr>
-              <tr v-if="mockedExpensesList.length === 0">
-                <td colspan="7" class="text-center" style="padding: 4rem;">
-                  <span class="empty-data">Nenhum gasto encontrado para os filtros selecionados.</span>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
+
+        <div class="pagination-container" v-if="totalPages > 1 && !isLoading">
+          <button class="btn-pagination" :disabled="currentPage === 1" @click="fetchExpenses(currentPage - 1)">
+            <i class="fa-solid fa-chevron-left"></i> Anterior
+          </button>
+          <span class="pagination-info">Página {{ currentPage }} de {{ totalPages }}</span>
+          <button class="btn-pagination" :disabled="currentPage === totalPages" @click="fetchExpenses(currentPage + 1)">
+            Próximo <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
       </main>
     </div>
 
@@ -250,7 +269,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useToast } from '@/utils/toast';
 import expensesService from '@/services/expensesService';
 import financeService from '@/services/financeService';
@@ -259,11 +278,25 @@ import EntryModal from '@/views/Expenses/EntryModal.vue';
 
 const { showToast } = useToast();
 
+const isLoading = ref(false);
+const expensesList = ref([]);
+const totalPages = ref(1);
+const currentPage = ref(1);
+
+const summaryData = ref({
+  totalAmount: 0,
+  totalCount: 0,
+  topVehicle: { name: '---', value: 0 },
+  topResponsible: { name: '---', value: 0 },
+  topCategory: { name: '---', value: 0, code: '' }
+});
+
 const isFiltersOpen = ref(false);
 
 const toggleFilters = () => {
   isFiltersOpen.value = !isFiltersOpen.value;
 };
+
 
 const expenseTypeOptions = [
   { label: 'Todos os tipos', value: '' },
@@ -279,11 +312,70 @@ const expenseTypeOptions = [
 
 const filters = ref({
   startDate: '', endDate: '', plate: '', doc: '',
-  providerId: null, expenseType: '', responsible: ''
+  providerId: null, providerName: '', expenseType: '', responsible: ''
 });
 
 const hasActiveFilters = computed(() => {
-  return Object.values(filters.value).some(val => val !== '');
+  const { providerName, ...rest } = filters.value;
+  return Object.values(rest).some(val => val !== '' && val !== null);
+});
+
+const fetchExpenses = async (page = 1) => {
+  if (isLoading.value) return;
+  isLoading.value = true;
+
+  try {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      showToast("Usuário não identificado.", "error");
+      return;
+    }
+
+    const params = {
+      userId: userId,
+      page: page,
+      initDate: filters.value.startDate || null,
+      finalDate: filters.value.endDate || null,
+      plate: filters.value.plate || null,
+      responsible: filters.value.responsible || null,
+      doc: filters.value.doc || null,
+      providerId: filters.value.providerId || null,
+      expenseType: filters.value.expenseType || null
+    };
+
+    const response = await expensesService.getExpenses(params);
+
+    expensesList.value = response.data;
+    summaryData.value = response.summary;
+    totalPages.value = response.totalPages;
+    currentPage.value = response.currentPage;
+
+  } catch (error) {
+    showToast("Erro ao carregar consulta de gastos.", "error");
+    expensesList.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const applyFilters = () => {
+  fetchExpenses(1);
+  isFiltersOpen.value = false;
+};
+
+const clearFilters = () => {
+  filters.value = {
+    startDate: '', endDate: '', plate: '', doc: '',
+    providerId: null, providerName: '', expenseType: '', responsible: ''
+  };
+  searchVehicleQuery.value = '';
+  searchResponsibleQuery.value = '';
+  searchProviderQuery.value = '';
+  fetchExpenses(1);
+};
+
+onMounted(() => {
+  fetchExpenses(1);
 });
 
 let vehicleTimer = null;
@@ -293,9 +385,10 @@ let providerTimer = null;
 onUnmounted(() => {
   if (vehicleTimer) clearTimeout(vehicleTimer);
   if (responsibleTimer) clearTimeout(responsibleTimer);
-  if (providerTimer) clearTimeout(providerTimer); 
+  if (providerTimer) clearTimeout(providerTimer);
 });
 
+// FORNECEDOR
 const searchProviderQuery = ref('');
 const showProviderDropdown = ref(false);
 const searchResultsProviders = ref([]);
@@ -306,13 +399,11 @@ const handleProviderSearch = () => {
     searchResultsProviders.value = [];
     return;
   }
-  
   providerTimer = setTimeout(async () => {
     try {
-      // Reutilizando a busca de clientes para buscar fornecedores
       searchResultsProviders.value = await financeService.searchClients(searchProviderQuery.value);
     } catch (error) {
-      console.error("Erro na busca de fornecedores", error);
+      console.error("Erro", error);
     }
   }, 400);
 };
@@ -329,10 +420,9 @@ const clearProvider = () => {
   filters.value.providerName = '';
   searchProviderQuery.value = '';
 };
-
 const hideProviderDropdownWithDelay = () => setTimeout(() => showProviderDropdown.value = false, 200);
 
-
+// VEÍCULO
 const searchVehicleQuery = ref('');
 const showVehicleDropdown = ref(false);
 const searchResultsVehicles = ref([]);
@@ -362,9 +452,9 @@ const clearVehicle = () => {
   filters.value.plate = '';
   searchVehicleQuery.value = '';
 };
-
 const hideVehicleDropdownWithDelay = () => setTimeout(() => showVehicleDropdown.value = false, 200);
 
+// RESPONSÁVEL
 const searchResponsibleQuery = ref('');
 const showResponsibleDropdown = ref(false);
 const searchResultsResponsible = ref([]);
@@ -394,69 +484,41 @@ const clearResponsible = () => {
   filters.value.responsible = '';
   searchResponsibleQuery.value = '';
 };
-
 const hideResponsibleDropdownWithDelay = () => setTimeout(() => showResponsibleDropdown.value = false, 200);
 
-const applyFilters = () => {
-  showToast("Buscando dados...", "success");
-  isFiltersOpen.value = false;
-};
 
-const clearFilters = () => {
-  filters.value = { 
-    startDate: '', endDate: '', plate: '', doc: '', 
-    providerId: null, providerName: '', expenseType: '', responsible: '' 
-  };
-  searchVehicleQuery.value = '';
-  searchResponsibleQuery.value = '';
-  searchProviderQuery.value = ''; 
-};
-
+// MODAL
 const showDetailsModal = ref(false);
 const selectedExpense = ref(null);
 
-const openDetails = (expense) => {
-  selectedExpense.value = {
-    ...expense,
-    linkedBy: 'João da Silva',
-    linkedDate: '15/10/2023',
-    observation: 'Abastecimento extra devido a rota desviada.',
-    totals: { products: 2450.00, services: 150.00, discount: 50.00, addition: 0, freight: 0, insurance: 0, grandTotal: 2550.00 },
-    items: [
-      { id: '001', name: 'Óleo Diesel S10', unit: 'LT', quantity: 400, unitCost: 6.12, addition: 0, discount: 48.00, totalValue: 2400.00 }
-    ]
-  };
-  showDetailsModal.value = true;
+const openDetails = async (expense) => {
+  try {
+    const details = await expensesService.getExpenseDetails(expense.entryId);
+    selectedExpense.value = details;
+    showDetailsModal.value = true;
+  } catch (error) {
+    showToast("Não foi possível carregar os detalhes desta nota.", "error");
+  }
 };
 
-const summaryMocks = ref({
-  totalAmount: 14580.50,
-  totalCount: 12,
-  topVehicle: { plate: 'ABC-1234', value: 5430.00 },
-  topResponsible: { name: 'JOÃO SILVA', value: 6120.50 },
-  topCategory: { name: 'Documentação', value: 8900.00, code: 'documentacao' }
-});
-
-const mockedExpensesList = ref([
-  {
-    id: 1, entryId: 10502, plate: 'ABC-1234', vehicleModel: 'Volvo FH 540',
-    responsible: 'JOÃO SILVA', provider: 'POSTO IPIRANGA', typeCode: 'combustivel', typeLabel: 'Combustível',
-    date: '15/10/2023', value: 2450.00, km: '45.000'
-  },
-  {
-    id: 2, entryId: 10508, plate: 'XYZ-9876', vehicleModel: 'Scania R450',
-    responsible: 'MARCOS PEIXOTO', provider: 'AUTO PECAS SAO JOSE', typeCode: 'manutencao', typeLabel: 'Manutenção',
-    date: '16/10/2023', value: 850.75, km: '112.400'
-  },
-  {
-    id: 3, entryId: 10515, plate: 'DEF-5678', vehicleModel: 'MB Actros',
-    responsible: 'LUCAS MARTINS', provider: 'DETRAN', typeCode: 'multa', typeLabel: 'Multa',
-    date: '18/10/2023', value: 3095.23, km: null
-  }
-]);
-
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  const val = Number(value);
+  if (isNaN(val)) return 'R$ 0,00';
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+};
+
+const formatDateBR = (dateStr) => {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+  return dateStr;
+};
+
+const getExpenseTypeLabel = (code) => {
+  const option = expenseTypeOptions.find(opt => opt.value === code);
+  return option ? option.label : code;
 };
 </script>
 

@@ -134,35 +134,17 @@ const props = defineProps({
     show: Boolean,
     expenseData: {
         type: Object,
-        default: () => ({
-            entryId: '10502',
-            provider: 'POSTO IPIRANGA LTDA',
-            plate: 'ABC-1234',
-            linkedBy: 'João da Silva',
-            linkedDate: '15/10/2023',
-            observation: 'Abastecimento extra devido a rota desviada e troca de óleo não planejada.',
-            totals: {
-                products: 2450.00,
-                services: 150.00,
-                discount: 50.00,
-                addition: 0,
-                freight: 0,
-                insurance: 0,
-                grandTotal: 2550.00
-            },
-            items: [
-                { id: '001', name: 'Óleo Diesel S10', unit: 'LT', quantity: 400, unitCost: 6.12, addition: 0, discount: 48.00, totalValue: 2400.00 },
-                { id: '002', name: 'Arla 32', unit: 'LT', quantity: 20, unitCost: 2.50, addition: 0, discount: 2.00, totalValue: 48.00 },
-                { id: '003', name: 'Filtro de Óleo', unit: 'UN', quantity: 1, unitCost: 102.00, addition: 0, discount: 0, totalValue: 102.00 }
-            ]
-        })
+        default: null
     }
 });
 
 defineEmits(['close']);
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
 const formatCurrency = (val) => {
+    if (val === null || val === undefined) return 'R$ 0,00';
+
     const num = Number(val);
     return isNaN(num) ? 'R$ 0,00' : currencyFormatter.format(num);
 };
@@ -191,6 +173,7 @@ const formattedData = computed(() => {
 
         items: (data.items || []).map(item => ({
             ...item,
+            quantity: Number(item.quantity) || 0,
             formattedUnitCost: formatCurrency(item.unitCost),
             formattedAddition: formatCurrency(item.addition),
             formattedDiscount: formatCurrency(item.discount),
@@ -199,4 +182,4 @@ const formattedData = computed(() => {
     };
 });
 </script>
-<style src="@/views/Expenses/expenses.css"></style>
+<style src="@/views/Expenses/expenses.css" scoped></style>

@@ -4,9 +4,9 @@ const expensesService = {
   async getStats() {
     try {
       const userId = localStorage.getItem('userId');
-      
+
       const response = await api.get('/expenses/stats', {
-        params: { userId } 
+        params: { userId }
       });
       return response.data;
     } catch (error) {
@@ -45,6 +45,28 @@ const expensesService = {
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar entradas pendentes:", error);
+      throw error;
+    }
+  },
+
+  async getExpenses(filters) {
+    try {
+      const response = await api.get('/expenses', {
+        params: filters
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao buscar a lista de gastos:", error);
+      throw error;
+    }
+  },
+
+  async getExpenseDetails(entryId) {
+    try {
+      const response = await api.get(`/expenses/${entryId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao buscar detalhes da entrada:", error);
       throw error;
     }
   }
