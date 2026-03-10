@@ -3,11 +3,7 @@ import api from '@/api/api';
 const expensesService = {
   async getStats() {
     try {
-      const userId = localStorage.getItem('userId');
-
-      const response = await api.get('/expenses/stats', {
-        params: { userId }
-      });
+      const response = await api.get('/expenses/stats');
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar estatísticas de gastos:", error);
@@ -37,11 +33,9 @@ const expensesService = {
     }
   },
 
-  async getPendingNotes(userId) {
+  async getPendingNotes() {
     try {
-      const response = await api.get('/expenses/pending', {
-        params: { userId }
-      });
+      const response = await api.get('/expenses/pending');
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar entradas pendentes:", error);

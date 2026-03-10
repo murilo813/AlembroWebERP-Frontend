@@ -188,14 +188,10 @@ const expenseTypeOptions = [
   { label: 'Outros', value: 'outros' }
 ];
 
-// MOCK DE NOTAS MANTIDO (Ainda não integramos as notas do back)
 const PendingNotes = ref([]);
 
 let debounceTimer = null;
 
-// =======================================================
-// LÓGICA DE BUSCA DO VEÍCULO (INTEGRADA)
-// =======================================================
 const searchVehicleQuery = ref('');
 const showVehicleDropdown = ref(false);
 const searchResultsVehicles = ref([]);
@@ -230,9 +226,6 @@ const selectVehicle = (item) => {
 
 const hideVehicleDropdownWithDelay = () => setTimeout(() => showVehicleDropdown.value = false, 200);
 
-// =======================================================
-// LÓGICA DE BUSCA DO RESPONSÁVEL (INTEGRADA)
-// =======================================================
 const searchResponsibleQuery = ref('');
 const showResponsibleDropdown = ref(false);
 const searchResultsResponsible = ref([]);
@@ -276,22 +269,17 @@ const clearResponsibleAndVehicle = () => {
 
 const hideResponsibleDropdownWithDelay = () => setTimeout(() => showResponsibleDropdown.value = false, 200);
 
-// =======================================================
+
 onMounted(async () => {
   isLoading.value = true;
   try {
-    const currentUserId = parseInt(localStorage.getItem('userId'), 10);
+    const entries = await expensesService.getPendingNotes();
 
-    if (currentUserId) {
-      const entries = await expensesService.getPendingNotes(currentUserId);
-
-      PendingNotes.value = entries.map(entry => ({
-        ...entry,
-        date: entry.date ? entry.date.split('-').reverse().join('/') : ''
-      }));
-    } else {
-      showToast("Usuário não autenticado.", "error");
-    }
+    PendingNotes.value = entries.map(entry => ({
+      ...entry,
+      date: entry.date ? entry.date.split('-').reverse().join('/') : ''
+    }));
+    
   } catch (error) {
     showToast("Erro ao carregar entradas pendentes do banco.", "error");
     console.error(error);
@@ -314,15 +302,7 @@ const saveLink = async () => {
     return;
   }
 
-  const currentUserId = parseInt(localStorage.getItem('userId'));
-
-  if (!currentUserId) {
-    showToast("Erro de autenticação: Usuário não encontrado.", "error");
-    return;
-  }
-
   const payload = {
-    userId: currentUserId,
     entryId: selectedNote.value.id,
     plate: linkForm.value.plate,
     responsible: linkForm.value.responsible,

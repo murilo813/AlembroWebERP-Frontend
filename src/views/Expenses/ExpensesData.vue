@@ -325,14 +325,7 @@ const fetchExpenses = async (page = 1) => {
   isLoading.value = true;
 
   try {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      showToast("Usuário não identificado.", "error");
-      return;
-    }
-
     const params = {
-      userId: userId,
       page: page,
       initDate: filters.value.startDate || null,
       finalDate: filters.value.endDate || null,
