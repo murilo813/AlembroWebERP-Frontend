@@ -79,13 +79,10 @@ const handleSave = async () => {
   }
 
   isSaving.value = true;
-  const loggedUserId = localStorage.getItem('userId');
-  const loggedCompanyId = localStorage.getItem('companyId');
+  
   const loggedUserName = localStorage.getItem('nomenclature') || "Usuário";
 
   const payload = {
-    userId: Number(loggedUserId),
-    companyId: Number(loggedCompanyId),
     observation: form.value.obs,
     date: form.value.date,
     scheduleDate: form.value.scheduleDate || null
