@@ -105,7 +105,7 @@
 import { ref, watch, computed } from 'vue';
 import contractsService from '@/services/contractsService';
 import financeService from '@/services/financeService';
-import CustomSelect from '@/components/common/CustomSelect.vue'; // Importado aqui
+import CustomSelect from '@/components/common/CustomSelect.vue'; 
 import { useToast } from '@/utils/toast';
 
 const props = defineProps({
@@ -127,7 +127,6 @@ let debounceTimer = null;
 const displayOriginalValue = ref('');
 const displayBalanceDue = ref('');
 
-// Configuração das opções para o CustomSelect
 const statusOptions = [
   { label: 'Aberto', value: 'aberto' },
   { label: 'Pago', value: 'pago' }
@@ -144,7 +143,6 @@ const form = ref({
   status: 'aberto'
 });
 
-// Funções de formatação mantidas...
 const formatToBRL = (val) => {
   const num = Number(val) || 0;
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num);
@@ -241,8 +239,6 @@ const handleSave = async () => {
   }
 
   isSaving.value = true;
-  const companyId = Number(localStorage.getItem('companyId'));
-  const userId = Number(localStorage.getItem('userId'));
 
   try {
     if (isEditing.value) {
@@ -269,8 +265,6 @@ const handleSave = async () => {
     } else {
       const payload = {
         clientId: form.value.clientId,
-        userId: userId,
-        companyId: companyId,
         contractType: form.value.contractType,
         generationDate: form.value.generationDate || null,
         dueDate: form.value.dueDate || null,

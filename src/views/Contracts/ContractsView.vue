@@ -243,14 +243,7 @@ const fetchContracts = async (isSilent = false) => {
   if (!isSilent) isLoading.value = true;
 
   try {
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      showToast("Usuário não autenticado.", "error");
-      return;
-    }
-
-    const data = await contractsService.getContracts(userId);
+    const data = await contractsService.getContracts();
 
     contractsList.value = data.contracts.map((c, index) => ({
       ...c,

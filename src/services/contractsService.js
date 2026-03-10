@@ -1,11 +1,9 @@
 import api from '@/api/api';
 
 const contractsService = {
-  async getContracts(userId) {
+  async getContracts() { 
     try {
-      const response = await api.get('/contracts', {
-        params: { userId }
-      });
+      const response = await api.get('/contracts');
       return response.data;
     } catch (error) {
       console.error("Erro na busca de contratos:", error);
