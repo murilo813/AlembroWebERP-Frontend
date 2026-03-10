@@ -193,3 +193,149 @@
     background: #ef4444;
     color: white;
 }
+
+/* ==========================================
+   SINO DE NOTIFICAÇÕES (Refatorado)
+========================================== */
+.notif-menu-container {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.notif-trigger {
+    position: relative;
+    color: #94a3b8;
+    font-size: 2rem;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+/* Sino verde se houver notificações */
+.notif-trigger.has-notifs {
+    color: #10b981;
+}
+
+.notif-menu-container.active .notif-trigger,
+.notif-trigger:hover {
+    color: #f8fafc;
+}
+
+/* Número flutuando sem bolinha vermelha */
+.notif-number {
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    color: #10b981; /* Verde Alembro */
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-shadow: 0 0.1rem 0.2rem rgba(0,0,0,0.8);
+}
+
+.notif-dropdown {
+    width: 32rem; 
+    left: auto;
+    right: -2rem; 
+    transform: none;
+    padding: 2.5rem 0 2rem 0; 
+}
+
+.notif-dropdown::before {
+    left: auto;
+    right: 2.8rem; 
+    transform: none;
+    transform: rotate(45deg);
+}
+
+.notif-dropdown .dropdown-header,
+.notif-dropdown .dropdown-divider {
+    padding: 0 2rem;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Melhorias de performance de Scroll */
+.notif-body {
+    max-height: 35rem; 
+    overflow-y: auto;
+    padding: 0 1rem 0 2rem; 
+    will-change: transform;
+    overscroll-behavior: contain; /* Impede a página inteira de rolar quando chega no fim */
+}
+
+.notif-body::-webkit-scrollbar { width: 4px; }
+.notif-body::-webkit-scrollbar-track { background: transparent; }
+.notif-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+.notif-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+    font-size: 1.3rem;
+}
+
+.notif-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Card mais limpo, sem hover extravagante */
+.notif-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.1rem solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+}
+
+.notif-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-right: 2rem; /* Espaço pro botão X não encavalar no texto */
+}
+
+.notif-client {
+    color: #f8fafc;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.notif-text {
+    color: #94a3b8;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin-bottom: 0.6rem;
+}
+
+.notif-date {
+    color: #10b981;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Botão X limpo e vermelho ao hover */
+.btn-remove-notif {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0.2rem;
+}
+
+.btn-remove-notif:hover {
+    color: #ef4444; /* Vermelho claro */
+}
