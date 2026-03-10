@@ -64,6 +64,10 @@ router.beforeEach((to, from, next) => {
     return next('/login');
   }
 
+  if (to.path === '/login' && isAuthenticated) {
+    return next('/home');
+  }
+
   if (to.meta.module && userType) {
     const userPermissions = ROLE_PERMISSIONS[userType] || [];
     
@@ -72,6 +76,7 @@ router.beforeEach((to, from, next) => {
       return next('/home');
     }
   }
+
   next();
 });
 
