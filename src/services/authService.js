@@ -21,7 +21,13 @@ export default {
     throw error;
   },
 
-  logout() {
-    localStorage.clear(); 
+  async logout() {
+    try {
+      await api.post('/logout'); 
+    } catch (error) {
+      console.error("Erro ao deslogar no servidor", error);
+    } finally {
+      localStorage.clear(); 
+    }
   }
 };

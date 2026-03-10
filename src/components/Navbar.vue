@@ -88,6 +88,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { COMPANIES, USER_TYPES, ROLE_PERMISSIONS } from '@/utils/constants';
 import { useToast } from '@/utils/toast';
+import authService from '@/services/authService';
 import notificationService from '@/services/notificationService';
 
 const router = useRouter();
@@ -181,8 +182,8 @@ onUnmounted(() => {
   if (pollingInterval) clearInterval(pollingInterval);
 });
 
-const logout = () => {
-  localStorage.clear();
+const logout = async () => {
+  await authService.logout();
   router.push('/login');
 };
 </script>
