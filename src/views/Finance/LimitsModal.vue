@@ -97,7 +97,6 @@ const props = defineProps({
 
 defineEmits(['close']);
 
-// 1. Instanciamos o formatador pesado UMA VEZ FORA de tudo
 const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
 const formatCurrency = (value) => {
@@ -111,7 +110,6 @@ const formatPercent = (value) => {
   return `${(parseFloat(value) * 100).toFixed(1)}%`;
 };
 
-// 2. Computed para mapear os Clientes (só roda quando as props.clients mudam)
 const formattedClients = computed(() => {
   if (!props.clients) return [];
   
@@ -127,7 +125,6 @@ const formattedClients = computed(() => {
   }));
 });
 
-// 3. Computed para mapear o Footer (só roda quando as props.groupInfo mudam)
 const formattedGroup = computed(() => {
   if (!props.groupInfo) return {};
   

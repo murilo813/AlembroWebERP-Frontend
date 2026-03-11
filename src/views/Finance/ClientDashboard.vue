@@ -81,6 +81,7 @@
                         <th class="col-date text-center">Vencimento</th>
                         <th class="col-money text-center">Valor Original</th>
                         <th class="col-money text-center">À Receber</th>
+                        <th style="width: 4rem;"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -92,7 +93,16 @@
                           {{ contrato.formattedDueDate }}
                         </td>
                         <td class="text-center">{{ contrato.formattedOriginal }}</td>
-                        <td class="fw-bold text-center">{{ contrato.formattedBalance }}</td>
+                        <td class="fw-bold text-center" :class="{'opacity-50': !contrato.isIncluded}">
+                          {{ contrato.formattedBalance }}
+                        </td>
+                        <td class="text-center" style="padding-left: 0; padding-right: 1rem;">
+                          <i class="fa-solid toggle-sum-icon"
+                             :class="contrato.isIncluded ? 'fa-square-check' : 'fa-square'"
+                             @click.stop="contrato.isIncluded = !contrato.isIncluded"
+                             title="Somar no total">
+                          </i>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -131,6 +141,7 @@
                         <th class="col-date text-center">Bom Para</th>
                         <th class="col-money text-center">Valor</th>
                         <th class="col-money text-center">À Receber</th>
+                        <th style="width: 4rem;"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -144,7 +155,16 @@
                           {{ cheque.formattedGoodFor }}
                         </td>
                         <td class="text-center">{{ cheque.formattedOriginal }}</td>
-                        <td class="fw-bold text-center">{{ cheque.formattedBalance }}</td>
+                        <td class="fw-bold text-center" :class="{'opacity-50': !cheque.isIncluded}">
+                          {{ cheque.formattedBalance }}
+                        </td>
+                        <td class="text-center" style="padding-left: 0; padding-right: 1rem;">
+                          <i class="fa-solid toggle-sum-icon"
+                             :class="cheque.isIncluded ? 'fa-square-check' : 'fa-square'"
+                             @click.stop="cheque.isIncluded = !cheque.isIncluded"
+                             title="Somar no total">
+                          </i>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -183,6 +203,7 @@
                         <th class="col-date text-center">Vencimento</th>
                         <th class="col-money text-center">Valor</th>
                         <th class="col-money text-center">À Receber</th>
+                        <th style="width: 4rem;"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -196,8 +217,15 @@
                           {{ nota.formattedDueDate }}
                         </td>
                         <td class="text-center">{{ nota.formattedOriginal }}</td>
-                        <td class="fw-bold text-center" :class="{ 'emerald': nota.isCredit }">
+                        <td class="fw-bold text-center" :class="{ 'emerald': nota.isCredit, 'opacity-50': !nota.isIncluded }">
                           {{ nota.formattedBalance }}
+                        </td>
+                        <td class="text-center" style="padding-left: 0; padding-right: 1rem;">
+                          <i class="fa-solid toggle-sum-icon"
+                             :class="nota.isIncluded ? 'fa-square-check' : 'fa-square'"
+                             @click.stop="nota.isIncluded = !nota.isIncluded"
+                             title="Somar no total">
+                          </i>
                         </td>
                       </tr>
                     </tbody>
@@ -237,7 +265,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import financeService from '@/services/financeService';
 import { useToast } from '@/utils/toast';
 import LimitsModal from '@/views/Finance/LimitsModal.vue';
@@ -253,28 +281,38 @@ const { showToast } = useToast();
 const isFetchingClient = ref(true);
 const activeGroupInfo = ref(null);
 
-// Arrays que receberão os dados pré-processados
 const activeGroupClients = ref([]);
 const interactions = ref([]);
 const contracts = ref([]);
 const checks = ref([]);
 const bills = ref([]);
 
-// Strings formatadas para os totais
-const totalContractsFormatted = ref('R$ 0,00');
-const totalChecksFormatted = ref('R$ 0,00');
-const totalBillsFormatted = ref('R$ 0,00');
-const grandTotalReceivableFormatted = ref('R$ 0,00');
+const totalContractsFormatted = computed(() => {
+  const sum = contracts.value.reduce((acc, curr) => curr.isIncluded ? acc + curr.balanceDueNum : acc, 0);
+  return formatCurrency(sum);
+});
+
+const totalChecksFormatted = computed(() => {
+  const sum = checks.value.reduce((acc, curr) => curr.isIncluded ? acc + curr.balanceDueNum : acc, 0);
+  return formatCurrency(sum);
+});
+
+const totalBillsFormatted = computed(() => {
+  const sum = bills.value.reduce((acc, curr) => curr.isIncluded ? acc + curr.balanceDueNum : acc, 0);
+  return formatCurrency(sum);
+});
+
+const grandTotalReceivableFormatted = computed(() => {
+  const cSum = contracts.value.reduce((acc, curr) => curr.isIncluded ? acc + curr.balanceDueNum : acc, 0);
+  const chSum = checks.value.reduce((acc, curr) => curr.isIncluded ? acc + curr.balanceDueNum : acc, 0);
+  const bSum = bills.value.reduce((acc, curr) => curr.isIncluded ? acc + curr.balanceDueNum : acc, 0);
+  return formatCurrency(cSum + chSum + bSum);
+});
 
 const showLimitsModal = ref(false);
 const showNewCollectionModal = ref(false);
 const activeAccordion = ref('');
 
-// =================================================================
-// PREVENÇÃO DE LENTIDÃO: FUNÇÕES FORA DO LOOP
-// O Intl.NumberFormat pesa DEMAIS se criado a cada linha da tabela.
-// Criamos UMA vez só e usamos a referência dele.
-// =================================================================
 const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
 const formatCurrency = (value) => {
@@ -298,9 +336,6 @@ const isOverdue = (dateString) => {
   return dueDate < today;
 };
 
-// =================================================================
-// BUSCA E PRÉ-PROCESSAMENTO (ONDE A MÁGICA DA PERFORMANCE ACONTECE)
-// =================================================================
 const fetchDashboardData = async () => {
   if (!props.client?.id) return;
 
@@ -310,21 +345,18 @@ const fetchDashboardData = async () => {
 
     activeGroupInfo.value = groupData.groupInfo;
 
-    // PROCESSA CLIENTES
     activeGroupClients.value = groupData.clients.map(c => ({
       ...c,
       safeKey: `client-${c.id}`,
       formattedLastSale: c.lastSale ? formatDate(c.lastSale) : null
     }));
 
-    // PROCESSA ATENDIMENTOS
     interactions.value = groupData.interactions.map(atd => ({
       ...atd,
       safeKey: `atd-${atd.id}`,
       formattedDate: formatDate(atd.date)
     }));
 
-    // PROCESSA CONTRATOS
     contracts.value = groupData.contracts.map((c, index) => ({
       ...c,
       safeKey: c.id ? `contract-${c.id}` : `contract-idx-${index}`,
@@ -332,10 +364,11 @@ const fetchDashboardData = async () => {
       formattedDueDate: formatDate(c.dueDate),
       formattedOriginal: formatCurrency(c.originalValue),
       formattedBalance: formatCurrency(c.balanceDue),
-      isLate: isOverdue(c.dueDate)
+      isLate: isOverdue(c.dueDate),
+      isIncluded: true,
+      balanceDueNum: Number(c.balanceDue) || 0
     }));
 
-    // PROCESSA CHEQUES
     checks.value = groupData.checks.map((c, index) => ({
       ...c,
       safeKey: c.document ? `check-${c.document}` : `check-idx-${index}`,
@@ -343,10 +376,11 @@ const fetchDashboardData = async () => {
       formattedGoodFor: formatDate(c.goodForDate),
       formattedOriginal: formatCurrency(c.originalValue),
       formattedBalance: formatCurrency(c.balanceDue),
-      isLate: isOverdue(c.goodForDate)
+      isLate: isOverdue(c.goodForDate),
+      isIncluded: true,
+      balanceDueNum: Number(c.balanceDue) || 0
     }));
 
-    // PROCESSA NOTAS FISCAIS
     bills.value = groupData.bills.map((b, index) => ({
       ...b,
       safeKey: b.nf ? `bill-${b.nf}-${b.installment}` : `bill-idx-${index}`,
@@ -355,14 +389,10 @@ const fetchDashboardData = async () => {
       formattedOriginal: formatCurrency(b.originalValue),
       formattedBalance: formatCurrency(b.balanceDue),
       isLate: isOverdue(b.dueDate),
-      isCredit: Number(b.balanceDue) < 0
+      isCredit: Number(b.balanceDue) < 0,
+      isIncluded: true,
+      balanceDueNum: Number(b.balanceDue) || 0
     }));
-
-    // PROCESSA TOTAIS
-    totalContractsFormatted.value = formatCurrency(groupData.totalContracts);
-    totalChecksFormatted.value = formatCurrency(groupData.totalChecks);
-    totalBillsFormatted.value = formatCurrency(groupData.totalBills);
-    grandTotalReceivableFormatted.value = formatCurrency(groupData.totalReceivable);
 
   } catch (error) {
     showToast("Erro ao carregar dados do grupo. Verifique sua conexão.", "error");

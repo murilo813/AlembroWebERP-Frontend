@@ -442,6 +442,33 @@
   border-top-color: rgba(255, 255, 255, 0.05);
 }
 
+.toggle-sum-icon {
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: #475569;
+}
+
+.toggle-sum-icon.fa-square-check {
+  color: #10b981; /* Verde Alembro */
+  text-shadow: 0 0 1rem rgba(16, 185, 129, 0.4);
+}
+
+.toggle-sum-icon:hover {
+  transform: scale(1.15);
+}
+
+.toggle-sum-icon:active {
+  transform: scale(0.9);
+}
+
+.opacity-50 {
+  opacity: 0.4;
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
 /* TOTAL GERAL */
 .grand-total-box {
   display: flex;
