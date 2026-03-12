@@ -1,26 +1,31 @@
 .home-container {
-    height: 100vh;
+    height: 100vh; 
     width: 100vw;
     display: flex;
-    align-items: center;
+    align-items: center; 
     justify-content: center;
+    padding-top: 8.5rem; 
+    padding-bottom: 0; 
     background: transparent !important;
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; 
 }
+
 .dashboard-box {
     display: flex;
-    align-items: center; 
+    align-items: flex-start; 
     justify-content: center;
     gap: 2rem; 
     width: 100%;
     max-width: 160rem; 
     padding: 0 2rem;
 }
+
 .placeholder-sidebar {
     width: 30rem;
     flex-shrink: 0;
 }
+
 .welcome-section {
     display: flex;
     flex: 1; 
@@ -28,20 +33,20 @@
     justify-content: center;
     min-width: 0; 
 }
+
 .glass-card {
     background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(1.6rem);
     -webkit-backdrop-filter: blur(1.6rem);
     border: 0.1rem solid rgba(255, 255, 255, 0.08);
-    
     width: 100%; 
-    
     padding: 6rem 4rem;
     border-radius: 2.4rem;
     box-shadow: 0 4rem 8rem -1.5rem rgba(0, 0, 0, 0.6);
     text-align: center;
     animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .status-badge {
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;
@@ -55,6 +60,7 @@
     margin-bottom: 2.5rem;
     border: 0.1rem solid rgba(16, 185, 129, 0.2);
 }
+
 .welcome-text {
     font-size: 5.2rem;
     color: #ffffff;
@@ -63,11 +69,13 @@
     letter-spacing: -0.3rem;
     margin-bottom: 1rem;
 }
+
 .user-highlight {
     color: #10b981;
     display: block;
     margin-top: 0.5rem;
 }
+
 .divider {
     height: 0.4rem;
     width: 6rem;
@@ -76,6 +84,7 @@
     border-radius: 1rem;
     box-shadow: 0 0 1.5rem rgba(16, 185, 129, 0.4);
 }
+
 .system-brand {
     font-size: 1.8rem;
     color: #64748b;
@@ -83,6 +92,7 @@
     letter-spacing: 0.8rem;
     font-weight: 800;
 }
+
 .quick-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -91,26 +101,45 @@
     padding-top: 4rem;
     border-top: 0.1rem solid rgba(255, 255, 255, 0.1);
 }
+
 .stat-item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
+
 .stat-label {
     font-size: 1.2rem;
     color: #64748b;
     font-weight: 600;
     text-transform: uppercase;
 }
+
 .stat-value {
     font-size: 1.8rem;
     color: #f8fafc;
     font-weight: 700;
 }
+
 .stat-value.emerald {
     color: #10b981;
 }
+
 @keyframes cardEntrance {
     from { opacity: 0; transform: scale(0.95) translateY(2rem); }
     to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-height: 900px) {
+    .dashboard-box {
+        transform: scale(0.95); 
+        transform-origin: center; 
+    }
+}
+
+@media (max-height: 750px) {
+    .dashboard-box {
+        transform: scale(0.90); 
+        transform-origin: center; 
+    }
 }
