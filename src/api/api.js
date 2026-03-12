@@ -3,7 +3,7 @@ import router from '@/router';
 
 const api = axios.create({
     // baseURL: 'http://localhost:5000',
-    baseURL: 'http://186.209.29.170:5002',
+    baseURL: 'https://zecao.alembro.com:8081/api',
     timeout: 10000,
     withCredentials: true,
 });
