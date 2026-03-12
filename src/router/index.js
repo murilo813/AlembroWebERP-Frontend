@@ -13,41 +13,41 @@ import { ROLE_PERMISSIONS } from '@/utils/constants';
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: LoginView },
-  { path: '/home', component: HomeView, meta: { requiresAuth: true } },
+  { path: '/home', component: HomeView },
   {
     path: '/finance',
     component: FinanceView,
-    meta: { module: 'finance', requiresAuth: true }
+    meta: { module: 'finance' }
   },
-  {
+    {
     path: '/contracts',
     component: ContractsView,
-    meta: { module: 'contracts', requiresAuth: true }
+    meta: { module: 'contracts' }
   },
   {
     path: '/stock',
     component: StockView,
-    meta: { module: 'stock', requiresAuth: true }
+    meta: { module: 'stock' }
   },
   {
     path: '/expenses',
     component: ExpensesView,
-    meta: { module: 'expenses', requiresAuth: true }
+    meta: { module: 'expenses' }
   },
   {
     path: '/expenses/bind', 
     component: ExpensesBind,
-    meta: { module: 'expenses', requiresAuth: true } 
+    meta: { module: 'expenses' } 
   },
   {
     path: '/expenses/data', 
     component: ExpensesData,
-    meta: { module: 'expenses', requiresAuth: true } 
+    meta: { module: 'expenses' } 
   },
   {
     path: '/management',
     component: ManagementView,
-    meta: { module: 'management', requiresAuth: true }
+    meta: { module: 'management' }
   },
 ];
 
@@ -56,29 +56,25 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const hasSessionCookie = document.cookie.split(';').some(c => c.trim().startsWith('session='));
-  
+router.beforeEach((to) => {
+  const hasMirrorCookie = /(^|;)\s*is_logged\s*=/.test(document.cookie);
   const userType = localStorage.getItem('userType');
 
-  if (to.path !== '/login' && !hasSessionCookie) {
-    console.warn("Sessão expirada no navegador. Redirecionando...");
+  if (to.meta.requiresAuth && !hasMirrorCookie) {
     localStorage.clear(); 
-    return next('/login');
+    return { path: '/login' }; 
   }
 
-  if (to.path === '/login' && hasSessionCookie) {
-    return next('/home');
+  if (to.path === '/login' && hasMirrorCookie) {
+    return { path: '/home' };
   }
 
   if (to.meta.module && userType) {
     const userPermissions = ROLE_PERMISSIONS[userType] || [];
     if (!userPermissions.includes(to.meta.module)) {
-      return next('/home');
+      return { path: '/home' };
     }
   }
-
-  next();
 });
 
 export default router;
