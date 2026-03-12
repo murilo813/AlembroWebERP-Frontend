@@ -63,7 +63,11 @@ const expensesService = {
       console.error("Erro ao buscar detalhes da entrada:", error);
       throw error;
     }
-  }
+  },
+  async deletePendingNote(id) {
+    const response = await api.delete(`/expenses/${id}`);
+    return response.data;
+  },
 };
 
 export default expensesService;

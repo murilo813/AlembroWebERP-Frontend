@@ -32,15 +32,21 @@
               <p>Nenhuma entrada pendente para conciliação.</p>
             </div>
 
-            <div v-else class="pending-list">
-              <div v-for="note in PendingNotes" :key="note.id" class="pending-card-item"
-                :class="{ 'active': selectedNote?.id === note.id }" @click="selectNote(note)">
-                <div class="card-item-top">
+            <div v-for="note in PendingNotes" :key="note.id" class="pending-card-item"
+              :class="{ 'active': selectedNote?.id === note.id }" @click="selectNote(note)">
+              
+              <div class="card-item-top" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
                   <span class="item-id">#{{ note.id }}</span>
                   <span class="item-date"><i class="fa-regular fa-calendar"></i> {{ note.date }}</span>
                 </div>
-                <div class="item-supplier">{{ note.provider }}</div>
+                
+                <button class="btn-clear text-red" title="Remover Entrada" @click.stop="removeNote(note.id)">
+                  <i class="fa-solid fa-times"></i>
+                </button>
               </div>
+              
+              <div class="item-supplier">{{ note.provider }}</div>
             </div>
           </aside>
 
@@ -183,8 +189,12 @@ const linkForm = ref({
 
 const expenseTypeOptions = [
   { label: 'Combustível', value: 'combustivel' },
-  { label: 'Manutenção/Peças', value: 'manutencao' },
-  { label: 'Serviços/Lavagem', value: 'servicos' },
+  { label: 'Manutenção', value: 'manutencao' },
+  { label: 'Aquisição', value: 'aquisicao' },
+  { label: 'Lavação', value: 'lavacao' },
+  { label: 'Documentação', value: 'documentacao' },
+  { label: 'Multa', value: 'multa' },
+  { label: 'Serviços', value: 'servicos' },
   { label: 'Outros', value: 'outros' }
 ];
 
@@ -323,6 +333,26 @@ const saveLink = async () => {
   } catch (error) {
     console.error("Erro ao salvar o vínculo:", error);
     showToast("Erro ao salvar o vínculo no banco de dados.", "error");
+  }
+};
+
+const removeNote = async (noteId) => {
+  if (!confirm(`Tem certeza que deseja ocultar a entrada #${noteId}?`)) return;
+
+  try {
+    await expensesService.deletePendingNote(noteId);
+
+    PendingNotes.value = PendingNotes.value.filter(n => n.id !== noteId);
+
+    if (selectedNote.value?.id === noteId) {
+      selectedNote.value = null;
+      clearResponsibleAndVehicle();
+    }
+
+    showToast("Entrada ocultada com sucesso.", "success");
+  } catch (error) {
+    console.error("Erro ao ocultar entrada:", error);
+    showToast("Erro ao ocultar a entrada.", "error");
   }
 };
 </script>
