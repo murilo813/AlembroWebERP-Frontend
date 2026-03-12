@@ -35,13 +35,13 @@
             <div v-for="note in PendingNotes" :key="note.id" class="pending-card-item"
               :class="{ 'active': selectedNote?.id === note.id }" @click="selectNote(note)">
               
-              <div class="card-item-top" style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
+              <div class="card-item-top" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1.5rem; flex: 1;">
                   <span class="item-id">#{{ note.id }}</span>
-                  <span class="item-date"><i class="fa-regular fa-calendar"></i> {{ note.date }}</span>
+                  <span class="item-date" style="margin-top: 0;"><i class="fa-regular fa-calendar"></i> {{ note.date }}</span>
                 </div>
                 
-                <button class="btn-clear text-red" title="Remover Entrada" @click.stop="removeNote(note.id)">
+                <button class="btn-clear text-red" title="Remover Entrada" @click.stop="removeNote(note.id)" style="display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; flex-shrink: 0; border-radius: 50%; transition: background 0.2s;">
                   <i class="fa-solid fa-times"></i>
                 </button>
               </div>
@@ -337,8 +337,6 @@ const saveLink = async () => {
 };
 
 const removeNote = async (noteId) => {
-  if (!confirm(`Tem certeza que deseja ocultar a entrada #${noteId}?`)) return;
-
   try {
     await expensesService.deletePendingNote(noteId);
 

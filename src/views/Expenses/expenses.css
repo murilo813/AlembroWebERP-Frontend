@@ -586,11 +586,18 @@
   border-radius: 0.8rem;
 }
 
-.btn-clear {
+.btn-clear.text-red {
   background: transparent;
   border: none;
+  transition: all 0.2s ease;
+  padding: 0.4rem;
   cursor: pointer;
-  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.btn-clear.text-red:hover {
+  transform: scale(1.2); 
+  filter: drop-shadow(0 0 0.5rem rgba(239, 68, 68, 0.8)); 
 }
 
 .uppercase-input {
@@ -1024,9 +1031,9 @@
 
 .modal-footer-compact {
   display: flex;
-  justify-content: space-between; /* Empurra o total pra esquerda e o botão pra direita */
+  justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 3rem; /* Reduz a altura (padding) */
+  padding: 1.5rem 3rem; 
   background: rgba(0, 0, 0, 0.2);
   border-top: 0.1rem solid rgba(255, 255, 255, 0.05);
 }
@@ -1045,7 +1052,7 @@
 }
 
 .modal-footer-total .value {
-  color: #10b981; /* Verde clássico (emerald) */
+  color: #10b981;
   font-size: 2.4rem;
   font-weight: 800;
 }
