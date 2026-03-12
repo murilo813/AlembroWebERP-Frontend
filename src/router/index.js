@@ -13,41 +13,41 @@ import { ROLE_PERMISSIONS } from '@/utils/constants';
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: LoginView },
-  { path: '/home', component: HomeView },
+  { path: '/home', component: HomeView, meta: { requiresAuth: true } },
   {
     path: '/finance',
     component: FinanceView,
-    meta: { module: 'finance' }
+    meta: { module: 'finance', requiresAuth: true }
   },
-    {
+  {
     path: '/contracts',
     component: ContractsView,
-    meta: { module: 'contracts' }
+    meta: { module: 'contracts', requiresAuth: true }
   },
   {
     path: '/stock',
     component: StockView,
-    meta: { module: 'stock' }
+    meta: { module: 'stock', requiresAuth: true }
   },
   {
     path: '/expenses',
     component: ExpensesView,
-    meta: { module: 'expenses' }
+    meta: { module: 'expenses', requiresAuth: true }
   },
   {
     path: '/expenses/bind', 
     component: ExpensesBind,
-    meta: { module: 'expenses' } 
+    meta: { module: 'expenses', requiresAuth: true } 
   },
   {
     path: '/expenses/data', 
     component: ExpensesData,
-    meta: { module: 'expenses' } 
+    meta: { module: 'expenses', requiresAuth: true } 
   },
   {
     path: '/management',
     component: ManagementView,
-    meta: { module: 'management' }
+    meta: { module: 'management', requiresAuth: true }
   },
 ];
 
@@ -57,22 +57,23 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('userId');
+  const hasSessionCookie = document.cookie.split(';').some(c => c.trim().startsWith('session='));
+  
   const userType = localStorage.getItem('userType');
 
-  if (to.path !== '/login' && !isAuthenticated) {
+  if (to.path !== '/login' && !hasSessionCookie) {
+    console.warn("Sessão expirada no navegador. Redirecionando...");
+    localStorage.clear(); 
     return next('/login');
   }
 
-  if (to.path === '/login' && isAuthenticated) {
+  if (to.path === '/login' && hasSessionCookie) {
     return next('/home');
   }
 
   if (to.meta.module && userType) {
     const userPermissions = ROLE_PERMISSIONS[userType] || [];
-    
     if (!userPermissions.includes(to.meta.module)) {
-      console.warn(`Acesso negado: Usuário ${userType} tentou acessar ${to.meta.module}`);
       return next('/home');
     }
   }
