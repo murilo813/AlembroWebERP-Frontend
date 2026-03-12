@@ -269,8 +269,9 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator:hover {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(5px);
+  /* background: rgba(15, 23, 42, 0.85); */ 
+  background: rgba(15, 23, 42, 0.98);   
+  /* backdrop-filter: blur(5px); */     
   display: flex;
   justify-content: center;
   align-items: center;
